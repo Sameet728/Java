@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Java OOP Handbook | MITAOE SPPU | Sameet Pisal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'] }
+      }
+    }
+  }
+</script>
+<style>
+/* Custom Scrollbar Vercel-like */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+.sl.act { background-color: #000; color: #fff; font-weight: 500; border-radius: 6px; }
+pre { tab-size: 4; }
+.card { scroll-margin-top: 80px; }
+mark { background-color: #fef08a; color: #1e293b; border-radius: 2px; padding: 0 2px; }
+.hljs { background: transparent !important; padding: 0 !important; }
+</style>
+</head>
+<body class="bg-[#FAFAFA] text-black font-sans antialiased selection:bg-black selection:text-white">
+<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-6 py-3 flex-wrap gap-4">
+<span class="font-semibold text-[17px] tracking-tight flex-1 min-w-[250px] flex items-center">
+  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+  Java OOP Handbook
+  <span class="text-gray-500 font-normal text-sm ml-3 hidden sm:inline-block border-l border-gray-300 pl-3">SY BTech | MITAOE SPPU | By Sameet Pisal</span>
+</span>
+<div class="relative w-full sm:w-80">
+  <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+  <input type="text" id="sb" class="pl-9 pr-4 py-1.5 rounded-md bg-white border border-gray-200 text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black w-full transition text-sm shadow-sm" placeholder="Search practicals, packages..." oninput="doSearch(this.value)">
+</div>
+</nav>
+<div class="flex min-h-[calc(100vh-57px)]">
+<aside id="sidebar" class="w-64 bg-[#FAFAFA] border-r border-gray-200 sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto hidden md:block flex-shrink-0 py-4 px-3 z-40"></aside>
+<main id="content" class="flex-1 p-4 md:p-10 min-w-0 max-w-5xl mx-auto w-full"><p class="text-sm text-gray-500 text-center py-6 font-medium" id="resinfo"></p></main>
+</div>
+<script>
+const practicals=[
+{id:1,title:"University Student Management System",pkg:"com.university.management",iface:"ExamEligibility, ScholarshipEligibility",code:
+`package com.university.management;
+import java.util.Scanner;
+
+interface ExamEligibility {
+    boolean isEligibleForExam();
+}
+interface ScholarshipEligibility {
+    boolean isEligibleForScholarship();
+}
+
+class Department {
+    protected final String departmentName;
+    protected static final String UNIVERSITY_NAME = "ABC University";
+    public Department(String d) {
+        this.departmentName = d;
+    }
+    public void displayDepartment() {
+        System.out.println("University  : " + UNIVERSITY_NAME);
+        System.out.println("Department  : " + departmentName);
+    }
+}
+
+class Course extends Department {
+    protected final String courseName;
+    protected final int courseCode;
+    public Course(String d, String c, int code) {
+        super(d);
+        this.courseName=c;
+        this.courseCode=code;
+    }
+    public void displayCourse() {
+        System.out.println("Course Name : " + courseName);
+        System.out.println("Course Code : " + courseCode);
+    }
+}
+
+class Student extends Course implements ExamEligibility, ScholarshipEligibility {
+    private final int studentId;
+    private final String studentName;
+    private double marks, attendance, gpa;
+    static int totalStudents = 0;
+
+    public Student(int id, String nm, String dept, String crs, int code, double marks, double att) {
+        super(dept, crs, code);
+        if (marks < 0 || marks > 100) throw new IllegalArgumentException("Marks must be between 0 and 100.");
+        if (att < 0 || att > 100)     throw new IllegalArgumentException("Attendance must be between 0 and 100.");
+        this.studentId=id; this.studentName=nm;
+        this.marks=marks; this.attendance=att;
+        this.gpa=calculateGPA(); totalStudents++;
+    }
+
+    public double calculateGPA() {
+        return marks / 10.0;
+    }
+    @Override public boolean isEligibleForExam() {
+        return attendance >= 75;
+    }
+    @Override public boolean isEligibleForScholarship() {
+        return gpa >= 8.5;
+    }
+
+    public void displayStudentDetails() {
+        System.out.println("\\n========== STUDENT DETAILS ==========");
+        displayDepartment(); displayCourse();
+        System.out.println("Student ID  : " + studentId);
+        System.out.println("Student Name: " + studentName);
+        System.out.println("Marks       : " + marks);
+        System.out.println("Attendance  : " + attendance + "%");
+        System.out.println("GPA         : " + gpa);
+        System.out.println("Exam        : " + (isEligibleForExam() ? "Eligible" : "Not Eligible"));
+        System.out.println("Scholarship : " + (isEligibleForScholarship() ? "Eligible" : "Not Eligible"));
+        System.out.println("=====================================");
+    }
+}
+
+public class UniversityManagementSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Student student = null; int choice;
+        do {
+            System.out.println("\\n====== UNIVERSITY MANAGEMENT SYSTEM ======");
+            System.out.println("1. Add Student  2. Display Details  3. Total Students  4. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Student ID: "); int id=sc.nextInt(); sc.nextLine();
+                        System.out.print("Name: "); String nm=sc.nextLine();
+                        System.out.print("Department: "); String dept=sc.nextLine();
+                        System.out.print("Course: "); String crs=sc.nextLine();
+                        System.out.print("Course Code: "); int cc=sc.nextInt();
+                        System.out.print("Marks (0-100): "); double mk=sc.nextDouble();
+                        System.out.print("Attendance (%): "); double att=sc.nextDouble();
+                        student = new Student(id,nm,dept,crs,cc,mk,att);
+                        System.out.println("Student Added Successfully!");
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                      catch(Exception e){ System.out.println("Invalid Input!"); sc.nextLine(); }
+                    break;
+                case 2: if(student!=null) student.displayStudentDetails(); else System.out.println("No record found!"); break;
+                case 3: System.out.println("Total Students: "+Student.totalStudents); break;
+                case 4: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 4);
+        sc.close();
+    }
+}`
+},
+{id:2,title:"Online Shopping System",pkg:"com.shopping.cart",iface:"Discountable",code:
+`package com.shopping.cart;
+import java.util.*;
+
+interface Discountable {
+    double applyDiscount(double amt);
+}
+
+class Product {
+    private final String name; private final int code;
+    private final double price; private final int qty;
+    static int totalProducts = 0;
+
+    public Product(String n, int c, double p, int q) {
+        if (p < 0) throw new IllegalArgumentException("Price cannot be negative.");
+        if (q < 0) throw new IllegalArgumentException("Quantity cannot be negative.");
+        this.name=n; this.code=c; this.price=p; this.qty=q; totalProducts++;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public int getQty() {
+        return qty;
+    }
+    public void display() {
+        System.out.println("Product: "+name+" | Code: "+code+" | Price: Rs."+price+" | Qty: "+qty);
+    }
+}
+
+class Cart implements Discountable {
+    private final List<Product> items = new ArrayList<>();
+    private static final double DISC_RATE = 0.10;
+
+    public void addProduct(Product p) {
+        items.add(p);
+        System.out.println(p.getName()+" added to cart.");
+    }
+
+    public double calcTotal() {
+        double t = 0; for(Product p : items) t += p.getPrice()*p.getQty(); return t;
+    }
+
+    @Override public double applyDiscount(double amt) {
+        return amt - (amt * DISC_RATE);
+    }
+
+    public void viewCart() {
+        if(items.isEmpty()){ System.out.println("Cart is empty!"); return; }
+        System.out.println("\\n===== CART ITEMS =====");
+        for(Product p : items) p.display();
+    }
+
+    public void checkout() {
+        if(items.isEmpty()){ System.out.println("Cart is empty!"); return; }
+        double total = calcTotal(), payable = applyDiscount(total);
+        System.out.println("\\n===== ORDER SUMMARY =====");
+        for(Product p : items) p.display();
+        System.out.println("Subtotal : Rs."+total);
+        System.out.println("Discount : 10%");
+        System.out.println("Payable  : Rs."+payable);
+        System.out.println("=========================");
+        items.clear(); System.out.println("Order Placed Successfully!");
+    }
+}
+
+public class OnlineShoppingSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); Cart cart = new Cart(); int choice;
+        do {
+            System.out.println("\\n====== ONLINE SHOPPING SYSTEM ======");
+            System.out.println("1. Add Product  2. View Cart  3. Checkout  4. Total Products  5. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Name: "); String n=sc.nextLine();
+                        System.out.print("Code: "); int c=sc.nextInt();
+                        System.out.print("Price: "); double p=sc.nextDouble();
+                        System.out.print("Qty: "); int q=sc.nextInt();
+                        cart.addProduct(new Product(n,c,p,q));
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                      catch(Exception e){ System.out.println("Invalid Input!"); sc.nextLine(); }
+                    break;
+                case 2: cart.viewCart(); break;
+                case 3: cart.checkout(); break;
+                case 4: System.out.println("Total Products Created: "+Product.totalProducts); break;
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 5);
+        sc.close();
+    }
+}`
+},
+{id:3,title:"Railway Reservation System",pkg:"com.railway.reservation",iface:"Reservable",code:
+`package com.railway.reservation;
+import java.util.*;
+
+interface Reservable {
+    boolean bookSeat(String passengerName);
+    boolean cancelSeat(String passengerName);
+}
+
+class Train {
+    protected final String trainName; protected final int trainNo;
+    protected static final String RAILWAY = "Indian Railways";
+    public Train(String n, int no) {
+        this.trainName=n;
+        this.trainNo=no;
+    }
+    public void displayTrain() {
+        System.out.println("Railway   : " + RAILWAY);
+        System.out.println("Train     : " + trainName + " (" + trainNo + ")");
+    }
+}
+
+class Passenger extends Train {
+    protected final String name; protected final int age; protected final String gender;
+    public Passenger(String nm, int ag, String gn, String tn, int tno) {
+        super(tn, tno);
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
+        if(ag<1||ag>120) throw new IllegalArgumentException("Invalid age: "+ag);
+        this.name=nm; this.age=ag; this.gender=gn;
+    }
+    public void displayPassenger() {
+        displayTrain();
+        System.out.println("Passenger : "+name+" | Age: "+age+" | Gender: "+gender);
+    }
+}
+
+class Ticket extends Train implements Reservable {
+    private final int totalSeats; private int availSeats;
+    private final double fare;
+    private final List<String> booked = new ArrayList<>();
+    static int totalTickets = 0;
+
+    public Ticket(String tn, int tno, int seats, double fare) {
+        super(tn, tno);
+        if(seats<=0) throw new IllegalArgumentException("Seats must be positive.");
+        if(fare<0)   throw new IllegalArgumentException("Fare cannot be negative.");
+        this.totalSeats=seats; this.availSeats=seats; this.fare=fare;
+    }
+
+    @Override public boolean bookSeat(String pName) {
+        if(availSeats<=0){ System.out.println("Error: All seats are booked!"); return false; }
+        booked.add(pName); availSeats--; totalTickets++;
+        System.out.println("Seat booked for "+pName+". Fare: Rs."+fare);
+        return true;
+    }
+
+    @Override public boolean cancelSeat(String pName) {
+        if(!booked.contains(pName)){ System.out.println("Passenger not found in booking."); return false; }
+        booked.remove(pName); availSeats++;
+        System.out.println("Booking cancelled for "+pName+".");
+        return true;
+    }
+
+    public void displayStatus() {
+        displayTrain();
+        System.out.println("Total Seats: "+totalSeats+" | Available: "+availSeats+" | Fare: Rs."+fare);
+        System.out.println("Booked: "+booked);
+    }
+}
+
+public class RailwayReservationSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); Ticket ticket = null; int choice;
+        do {
+            System.out.println("\\n====== RAILWAY RESERVATION SYSTEM ======");
+            System.out.println("1. Setup Train  2. Book Seat  3. Cancel Seat  4. View Status  5. Total Tickets  6. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Train Name: "); String tn=sc.nextLine();
+                        System.out.print("Train No: "); int tno=sc.nextInt();
+                        System.out.print("Total Seats: "); int s=sc.nextInt();
+                        System.out.print("Fare (Rs.): "); double f=sc.nextDouble();
+                        ticket=new Ticket(tn,tno,s,f); System.out.println("Train setup done.");
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 2:
+                    if(ticket==null){ System.out.println("Setup train first!"); break; }
+                    sc.nextLine(); System.out.print("Passenger Name: "); ticket.bookSeat(sc.nextLine()); break;
+                case 3:
+                    if(ticket==null){ System.out.println("Setup train first!"); break; }
+                    sc.nextLine(); System.out.print("Passenger Name: "); ticket.cancelSeat(sc.nextLine()); break;
+                case 4: if(ticket!=null) ticket.displayStatus(); else System.out.println("No train setup!"); break;
+                case 5: System.out.println("Total Tickets Booked: "+Ticket.totalTickets); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 6);
+        sc.close();
+    }
+}`
+},
+{id:4,title:"Employee Payroll Management System",pkg:"com.company.hr",iface:"Payable",code:
+`package com.company.hr;
+import java.util.*;
+
+interface Payable {
+    double calculateSalary();
+    void displayPayslip();
+}
+
+class Employee {
+    protected final int empId; protected final String name; protected final String designation;
+    protected static final String COMPANY = "XYZ Corporation";
+    static int totalEmployees = 0;
+    public Employee(int id, String nm, String desig) {
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
+        this.empId=id; this.name=nm; this.designation=desig; totalEmployees++;
+    }
+    public void displayEmployee() {
+        System.out.println("Company     : " + COMPANY);
+        System.out.println("Emp ID      : " + empId);
+        System.out.println("Name        : " + name);
+        System.out.println("Designation : " + designation);
+    }
+}
+
+class Manager extends Employee implements Payable {
+    private final double basicSalary; private final int workingDays; private final double incentive;
+    private static final double BONUS = 0.20;
+    public Manager(int id, String nm, double basic, int days, double inc) {
+        super(id, nm, "Manager");
+        if(basic<0)  throw new IllegalArgumentException("Salary cannot be negative.");
+        if(days<0)   throw new IllegalArgumentException("Working days cannot be negative.");
+        this.basicSalary=basic; this.workingDays=days; this.incentive=inc;
+    }
+    @Override public double calculateSalary() {
+        return (basicSalary/30.0)*workingDays + (basicSalary*BONUS) + incentive;
+    }
+    @Override public void displayPayslip() {
+        System.out.println("\\n========== MANAGER PAYSLIP ==========");
+        displayEmployee();
+        System.out.printf("Basic Salary : Rs.%.2f%n", basicSalary);
+        System.out.println("Working Days : " + workingDays);
+        System.out.printf("Incentive    : Rs.%.2f%n", incentive);
+        System.out.printf("Net Salary   : Rs.%.2f%n", calculateSalary());
+        System.out.println("=====================================");
+    }
+}
+
+class Clerk extends Employee implements Payable {
+    private final double basicSalary; private final int workingDays;
+    public Clerk(int id, String nm, double basic, int days) {
+        super(id, nm, "Clerk");
+        if(basic<0) throw new IllegalArgumentException("Salary cannot be negative.");
+        if(days<0)  throw new IllegalArgumentException("Working days cannot be negative.");
+        this.basicSalary=basic; this.workingDays=days;
+    }
+    @Override public double calculateSalary() {
+        return (basicSalary/30.0)*workingDays;
+    }
+    @Override public void displayPayslip() {
+        System.out.println("\\n========== CLERK PAYSLIP ==========");
+        displayEmployee();
+        System.out.printf("Basic Salary : Rs.%.2f%n", basicSalary);
+        System.out.println("Working Days : " + workingDays);
+        System.out.printf("Net Salary   : Rs.%.2f%n", calculateSalary());
+        System.out.println("===================================");
+    }
+}
+
+public class EmployeePayrollSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); List<Payable> list = new ArrayList<>(); int choice;
+        do {
+            System.out.println("\\n====== EMPLOYEE PAYROLL SYSTEM ======");
+            System.out.println("1. Add Manager  2. Add Clerk  3. All Payslips  4. Total Employees  5. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1: case 2:
+                    try {
+                        sc.nextLine();
+                        System.out.print("ID: "); int id=sc.nextInt(); sc.nextLine();
+                        System.out.print("Name: "); String nm=sc.nextLine();
+                        System.out.print("Basic Salary: "); double bs=sc.nextDouble();
+                        System.out.print("Working Days: "); int wd=sc.nextInt();
+                        if(choice==1){
+                            System.out.print("Incentive: "); double inc=sc.nextDouble();
+                            list.add(new Manager(id,nm,bs,wd,inc)); System.out.println("Manager Added!");
+                        } else { list.add(new Clerk(id,nm,bs,wd)); System.out.println("Clerk Added!"); }
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                      catch(Exception e){ System.out.println("Invalid Input!"); sc.nextLine(); }
+                    break;
+                case 3: if(list.isEmpty()) System.out.println("No employees!"); else for(Payable e:list) e.displayPayslip(); break;
+                case 4: System.out.println("Total Employees: "+Employee.totalEmployees); break;
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 5);
+        sc.close();
+    }
+}`
+},
+{id:5,title:"Library Management System",pkg:"com.library.system",iface:"Borrowable",code:
+`package com.library.system;
+import java.util.*;
+
+interface Borrowable {
+    void issueBook(String memberId);
+    void returnBook(String memberId);
+}
+
+class BookUnavailableException extends Exception {
+    public BookUnavailableException(String msg) {
+        super(msg);
+    }
+}
+class FineCalculationException extends Exception {
+    public FineCalculationException(String msg) {
+        super(msg);
+    }
+}
+
+class LibraryEntity {
+    protected final String instituteName;
+    protected static final String LIBRARY = "City Central Library";
+    public LibraryEntity() {
+        this.instituteName = LIBRARY;
+    }
+    public void displayLibrary() {
+        System.out.println("Library: " + instituteName);
+    }
+}
+
+class Book extends LibraryEntity implements Borrowable {
+    private final int bookId; private final String title; private final String author;
+    private boolean available = true;
+    private final List<String> borrowedBy = new ArrayList<>();
+    static int totalBooks = 0;
+
+    public Book(int id, String t, String a) {
+        if(t==null||t.isEmpty()) throw new IllegalArgumentException("Title cannot be empty.");
+        this.bookId=id; this.title=t; this.author=a; totalBooks++;
+    }
+
+    @Override public void issueBook(String memberId) {
+        try {
+            if(!available) throw new BookUnavailableException("Book '"+title+"' is not available.");
+            available=false; borrowedBy.add(memberId);
+            System.out.println("Book '"+title+"' issued to Member: "+memberId);
+        } catch(BookUnavailableException e){ System.out.println("Error: "+e.getMessage()); }
+    }
+
+    @Override public void returnBook(String memberId) {
+        try {
+            if(!borrowedBy.contains(memberId)) throw new FineCalculationException("Member "+memberId+" did not borrow this book.");
+            borrowedBy.remove(memberId); available=true;
+            System.out.println("Book '"+title+"' returned by Member: "+memberId+". Fine: Rs.0");
+        } catch(FineCalculationException e){ System.out.println("Error: "+e.getMessage()); }
+    }
+
+    public void display() {
+        displayLibrary();
+        System.out.println("Book ID: "+bookId+" | Title: "+title+" | Author: "+author+" | Status: "+(available?"Available":"Issued"));
+    }
+}
+
+class Member extends LibraryEntity {
+    private final String memberId; private final String memberName;
+    static int totalMembers = 0;
+    public Member(String id, String nm) {
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Member name cannot be empty.");
+        this.memberId=id; this.memberName=nm; totalMembers++;
+    }
+    public String getMemberId() {
+        return memberId;
+    }
+    public void display() {
+        displayLibrary();
+        System.out.println("Member ID: "+memberId+" | Name: "+memberName);
+    }
+}
+
+public class LibraryManagementSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Book> books=new ArrayList<>(); List<Member> members=new ArrayList<>(); int choice;
+        do {
+            System.out.println("\\n====== LIBRARY MANAGEMENT SYSTEM ======");
+            System.out.println("1. Add Book  2. Add Member  3. Issue Book  4. Return Book  5. View All  6. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Book ID: "); int id=sc.nextInt(); sc.nextLine();
+                        System.out.print("Title: "); String t=sc.nextLine();
+                        System.out.print("Author: "); String a=sc.nextLine();
+                        books.add(new Book(id,t,a)); System.out.println("Book Added!");
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 2:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Member ID: "); String mid=sc.nextLine();
+                        System.out.print("Name: "); String nm=sc.nextLine();
+                        members.add(new Member(mid,nm)); System.out.println("Member Added!");
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 3:
+                    sc.nextLine();
+                    System.out.print("Enter Book ID: "); int bid=Integer.parseInt(sc.nextLine());
+                    System.out.print("Enter Member ID: "); String mid=sc.nextLine();
+                    books.stream().filter(b->b.hashCode()==bid||(books.indexOf(b)+1)==bid).findFirst().ifPresent(b->b.issueBook(mid));
+                    if(!books.isEmpty()) books.get(bid-1).issueBook(mid);
+                    break;
+                case 4:
+                    sc.nextLine();
+                    System.out.print("Enter Book ID: "); int rid=Integer.parseInt(sc.nextLine());
+                    System.out.print("Enter Member ID: "); String rmid=sc.nextLine();
+                    if(rid>=1&&rid<=books.size()) books.get(rid-1).returnBook(rmid);
+                    else System.out.println("Invalid Book ID!");
+                    break;
+                case 5:
+                    System.out.println("--- Books ---");
+                    if(books.isEmpty()) System.out.println("No books!"); else for(Book b:books) b.display();
+                    System.out.println("--- Members ("+Member.totalMembers+") ---");
+                    if(members.isEmpty()) System.out.println("No members!"); else for(Member m:members) m.display();
+                    break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 6);
+        sc.close();
+    }
+}`
+},
+{id:6,title:"Banking System with Transaction History",pkg:"com.bank.accounts",iface:"Transactable",code:
+`package com.bank.accounts;
+import java.util.*;
+
+interface Transactable {
+    void deposit(double amt);
+    void withdraw(double amt);
+    void displayHistory();
+}
+
+class Account {
+    protected final int accNo; protected final String holderName;
+    protected double balance;
+    protected static final String BANK = "National Bank";
+    static int totalAccounts = 0;
+
+    public Account(int no, String nm, double initBal) {
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Holder name cannot be empty.");
+        if(initBal<0) throw new IllegalArgumentException("Initial balance cannot be negative.");
+        this.accNo=no; this.holderName=nm; this.balance=initBal; totalAccounts++;
+    }
+    public void displayAccount() {
+        System.out.println("Bank       : " + BANK);
+        System.out.println("Acc No     : " + accNo);
+        System.out.println("Holder     : " + holderName);
+        System.out.printf ("Balance    : Rs.%.2f%n", balance);
+    }
+}
+
+class Transaction {
+    private final String type; private final double amount; private final double balAfter;
+    public Transaction(String t, double a, double b) {
+        this.type=t;
+        this.amount=a;
+        this.balAfter=b;
+    }
+    public String toString() {
+        return type+" | Rs."+amount+" | Balance: Rs."+balAfter;
+    }
+}
+
+class SavingsAccount extends Account implements Transactable {
+    private final List<Transaction> history = new ArrayList<>();
+    private static final double MIN_BAL = 500.0;
+
+    public SavingsAccount(int no, String nm, double initBal) {
+        super(no,nm,initBal);
+    }
+
+    @Override public void deposit(double amt) {
+        if(amt<=0){ System.out.println("Error: Invalid deposit amount."); return; }
+        balance+=amt;
+        history.add(new Transaction("DEPOSIT", amt, balance));
+        System.out.printf("Deposited Rs.%.2f. New Balance: Rs.%.2f%n", amt, balance);
+    }
+
+    @Override public void withdraw(double amt) {
+        if(amt<=0){ System.out.println("Error: Invalid withdrawal amount."); return; }
+        if(balance-amt < MIN_BAL){
+            System.out.printf("Error: Insufficient balance. Min balance Rs.%.2f must be maintained.%n", MIN_BAL); return;
+        }
+        balance-=amt;
+        history.add(new Transaction("WITHDRAW", amt, balance));
+        System.out.printf("Withdrawn Rs.%.2f. New Balance: Rs.%.2f%n", amt, balance);
+    }
+
+    @Override public void displayHistory() {
+        System.out.println("\\n===== TRANSACTION HISTORY =====");
+        displayAccount();
+        if(history.isEmpty()){ System.out.println("No transactions yet."); return; }
+        for(int i=0;i<history.size();i++) System.out.println((i+1)+". "+history.get(i));
+        System.out.println("================================");
+    }
+}
+
+public class BankingSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); SavingsAccount acc = null; int choice;
+        do {
+            System.out.println("\\n====== BANKING SYSTEM ======");
+            System.out.println("1. Create Account  2. Deposit  3. Withdraw  4. Balance  5. History  6. Total Accounts  7. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1:
+                    try {
+                        sc.nextLine();
+                        System.out.print("Account No: "); int no=sc.nextInt(); sc.nextLine();
+                        System.out.print("Holder Name: "); String nm=sc.nextLine();
+                        System.out.print("Initial Balance: "); double bal=sc.nextDouble();
+                        acc=new SavingsAccount(no,nm,bal); System.out.println("Account Created!");
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 2: if(acc==null){System.out.println("Create account first!");break;} System.out.print("Amount: "); acc.deposit(sc.nextDouble()); break;
+                case 3: if(acc==null){System.out.println("Create account first!");break;} System.out.print("Amount: "); acc.withdraw(sc.nextDouble()); break;
+                case 4: if(acc!=null) acc.displayAccount(); else System.out.println("No account!"); break;
+                case 5: if(acc!=null) acc.displayHistory(); else System.out.println("No account!"); break;
+                case 6: System.out.println("Total Accounts: "+Account.totalAccounts); break;
+                case 7: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 7);
+        sc.close();
+    }
+}`
+},
+{id:7,title:"Vehicle Rental System",pkg:"com.rental.vehicles",iface:"Rentable",code:
+`package com.rental.vehicles;
+import java.util.Scanner;
+
+interface Rentable {
+    double calculateRent(int days);
+}
+
+class Vehicle {
+    protected final String vehicleId; protected final String brand;
+    protected boolean available;
+    protected static final String COMPANY = "QuickRent Vehicles";
+    static int totalVehicles = 0;
+
+    public Vehicle(String id, String b) {
+        if(id==null||id.isEmpty()) throw new IllegalArgumentException("Vehicle ID cannot be empty.");
+        this.vehicleId=id; this.brand=b; this.available=true; totalVehicles++;
+    }
+    public void displayVehicle() {
+        System.out.println("Company  : " + COMPANY);
+        System.out.println("ID       : " + vehicleId);
+        System.out.println("Brand    : " + brand);
+        System.out.println("Status   : " + (available ? "Available" : "Rented"));
+    }
+}
+
+class Car extends Vehicle implements Rentable {
+    private static final double RATE = 1500.0;
+    public Car(String id, String b) {
+        super(id, b);
+    }
+    @Override public double calculateRent(int days) {
+        if(days<=0) throw new IllegalArgumentException("Rental duration must be positive.");
+        return RATE * days;
+    }
+    public void display() {
+        System.out.print("[CAR] ");
+        displayVehicle();
+        System.out.println("Rate     : Rs."+RATE+"/day");
+    }
+}
+
+class Bike extends Vehicle implements Rentable {
+    private static final double RATE = 500.0;
+    public Bike(String id, String b) {
+        super(id, b);
+    }
+    @Override public double calculateRent(int days) {
+        if(days<=0) throw new IllegalArgumentException("Rental duration must be positive.");
+        return RATE * days;
+    }
+    public void display() {
+        System.out.print("[BIKE] ");
+        displayVehicle();
+        System.out.println("Rate     : Rs."+RATE+"/day");
+    }
+}
+
+public class VehicleRentalSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); int choice;
+        Car car = new Car("CAR-001","Hyundai i20");
+        Bike bike = new Bike("BK-001","Honda Activa");
+
+        do {
+            System.out.println("\\n====== VEHICLE RENTAL SYSTEM ======");
+            System.out.println("1. View Cars  2. View Bikes  3. Rent Car  4. Rent Bike  5. Return Vehicle  6. Total Vehicles  7. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            switch(choice) {
+                case 1: car.display(); break;
+                case 2: bike.display(); break;
+                case 3:
+                    if(!car.available){ System.out.println("Car not available!"); break; }
+                    try {
+                        System.out.print("Rental Days: "); int d=sc.nextInt();
+                        double rent=car.calculateRent(d);
+                        car.available=false;
+                        System.out.printf("Car rented for %d day(s). Total Rent: Rs.%.2f%n",d,rent);
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 4:
+                    if(!bike.available){ System.out.println("Bike not available!"); break; }
+                    try {
+                        System.out.print("Rental Days: "); int d=sc.nextInt();
+                        double rent=bike.calculateRent(d);
+                        bike.available=false;
+                        System.out.printf("Bike rented for %d day(s). Total Rent: Rs.%.2f%n",d,rent);
+                    } catch(IllegalArgumentException e){ System.out.println("Error: "+e.getMessage()); }
+                    break;
+                case 5:
+                    System.out.println("1. Return Car  2. Return Bike"); int r=sc.nextInt();
+                    if(r==1&&!car.available){ car.available=true; System.out.println("Car returned."); }
+                    else if(r==2&&!bike.available){ bike.available=true; System.out.println("Bike returned."); }
+                    else System.out.println("Vehicle was not rented!");
+                    break;
+                case 6: System.out.println("Total Vehicles: "+Vehicle.totalVehicles); break;
+                case 7: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while(choice != 7);
+        sc.close();
+    }
+}`
+},
+{id:8,title:"Inventory Management System",pkg:"com.inventory.stock",iface:"Storable",code:
+`package com.inventory.stock;
+import java.util.*;
+
+interface Storable {
+    void addStock(int qty);
+    void removeStock(int qty);
+    int getStock();
+}
+
+class Item {
+    private final int itemCode; private final String itemName;
+    private int quantity; private final double price;
+    private static final int REORDER_LEVEL = 10;
+    static int totalItems = 0;
+
+    public Item(int code, String name, int qty, double price) {
+        if(name==null||name.isEmpty()) throw new IllegalArgumentException("Item name cannot be empty.");
+        if(qty<0)    throw new IllegalArgumentException("Quantity cannot be negative.");
+        if(price<0)  throw new IllegalArgumentException("Price cannot be negative.");
+        this.itemCode=code; this.itemName=name; this.quantity=qty; this.price=price; totalItems++;
+    }
+    public int getCode() {
+        return itemCode;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int q) {
+        this.quantity=q;
+    }
+    public void display() {
+        System.out.println("Code: "+itemCode+" | Name: "+itemName+" | Qty: "+quantity+" | Price: Rs."+price
+                +(quantity<=REORDER_LEVEL?" [*** REORDER ALERT ***]":""));
+    }
+}
+
+class Inventory implements Storable {
+    private final List<Item> items = new ArrayList<>();
+    private Item selected = null;
+
+    public void selectItem(int code){
+        selected=null; for(Item i:items) if(i.getCode()==code){ selected=i; break; }
+        if(selected==null) System.out.println("Item code "+code+" not found.");
+        else System.out.println("Selected: "+code);
+    }
+
+    public boolean addItem(Item item) {
+        for(Item i:items) if(i.getCode()==item.getCode()){ System.out.println("Error: Duplicate item code!"); return false; }
+        items.add(item); System.out.println("Item added."); return true;
+    }
+
+    @Override public void addStock(int qty){
+        if(selected==null){System.out.println("Select item first!");return;}
+        if(qty<=0){System.out.println("Qty must be positive.");return;}
+        selected.setQuantity(selected.getQuantity()+qty); System.out.println("Stock added. New Qty: "+selected.getQuantity());
+    }
+
+    @Override public void removeStock(int qty){
+        if(selected==null){System.out.println("Select item first!");return;}
+        if(qty<=0){System.out.println("Qty must be positive.");return;}
+        if(qty>selected.getQuantity()){System.out.println("Error: Stock underflow! Available: "+selected.getQuantity());return;}
+        selected.setQuantity(selected.getQuantity()-qty); System.out.println("Stock removed. New Qty: "+selected.getQuantity());
+    }
+
+    @Override public int getStock() {
+        return selected!=null ? selected.getQuantity() : -1;
+    }
+
+    public void displayAll(){
+        if(items.isEmpty()){System.out.println("No items in inventory.");return;}
+        System.out.println("\\n===== INVENTORY =====");
+        for(Item i:items) i.display();
+        System.out.println("=====================");
+    }
+}
+
+public class InventoryManagementSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Inventory inv=new Inventory(); int choice;
+        do{
+            System.out.println("\\n====== INVENTORY MANAGEMENT SYSTEM ======");
+            System.out.println("1. Add Item  2. Select Item  3. Add Stock  4. Remove Stock  5. View Inventory  6. Total Items  7. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        System.out.print("Code: "); int c=sc.nextInt(); sc.nextLine();
+                        System.out.print("Name: "); String n=sc.nextLine();
+                        System.out.print("Qty: "); int q=sc.nextInt();
+                        System.out.print("Price: "); double p=sc.nextDouble();
+                        inv.addItem(new Item(c,n,q,p));
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2: System.out.print("Item Code: "); inv.selectItem(sc.nextInt()); break;
+                case 3: System.out.print("Add Qty: "); inv.addStock(sc.nextInt()); break;
+                case 4: System.out.print("Remove Qty: "); inv.removeStock(sc.nextInt()); break;
+                case 5: inv.displayAll(); break;
+                case 6: System.out.println("Total Items: "+Item.totalItems); break;
+                case 7: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=7);
+        sc.close();
+    }
+}`
+},
+{id:9,title:"Hospital Appointment Booking System",pkg:"com.hospital.appointments",iface:"Schedulable",code:
+`package com.hospital.appointments;
+import java.util.*;
+
+interface Schedulable {
+    boolean bookAppointment(String patientName, int slot);
+    boolean cancelAppointment(int slot);
+}
+
+class Hospital {
+    protected static final String HOSPITAL_NAME = "City Health Hospital";
+    public void displayHospital() {
+        System.out.println("Hospital: " + HOSPITAL_NAME);
+    }
+}
+
+class Doctor extends Hospital {
+    protected final int doctorId; protected final String doctorName; protected final String specialization;
+    static int totalDoctors = 0;
+    public Doctor(int id, String nm, String spec){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Doctor name cannot be empty.");
+        this.doctorId=id; this.doctorName=nm; this.specialization=spec; totalDoctors++;
+    }
+    public void displayDoctor(){
+        displayHospital();
+        System.out.println("Doctor ID   : "+doctorId+" | Name: "+doctorName+" | Spec: "+specialization);
+    }
+}
+
+class Patient extends Hospital {
+    private final String patientId; private final String name; private final int age;
+    static int totalPatients = 0;
+    public Patient(String pid, String nm, int age){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Patient name cannot be empty.");
+        if(age<0||age>150) throw new IllegalArgumentException("Invalid patient age.");
+        this.patientId=pid; this.name=nm; this.age=age; totalPatients++;
+    }
+    public String getName() {
+        return name;
+    }
+    public void display() {
+        displayHospital();
+        System.out.println("Patient: "+patientId+" | "+name+" | Age: "+age);
+    }
+}
+
+class Appointment extends Doctor implements Schedulable {
+    private final String[] slots = new String[5];
+    private static final int MAX_SLOTS = 5;
+    static int totalAppointments = 0;
+
+    public Appointment(int id, String nm, String spec) {
+        super(id,nm,spec);
+        Arrays.fill(slots,null);
+    }
+
+    public void displaySlots(){
+        displayDoctor();
+        System.out.println("--- Available Slots (1-"+MAX_SLOTS+") ---");
+        for(int i=0;i<MAX_SLOTS;i++) System.out.println("Slot "+(i+1)+": "+(slots[i]==null?"Available":slots[i]));
+    }
+
+    @Override public boolean bookAppointment(String patientName, int slot){
+        if(slot<1||slot>MAX_SLOTS){ System.out.println("Error: Invalid time slot."); return false; }
+        if(slots[slot-1]!=null){ System.out.println("Error: Slot "+slot+" already booked! (Overlapping appointment)"); return false; }
+        if(patientName==null||patientName.isEmpty()){ System.out.println("Error: Null/empty patient info."); return false; }
+        slots[slot-1]=patientName; totalAppointments++;
+        System.out.println("Appointment booked for "+patientName+" at Slot "+slot); return true;
+    }
+
+    @Override public boolean cancelAppointment(int slot){
+        if(slot<1||slot>MAX_SLOTS){ System.out.println("Error: Invalid slot."); return false; }
+        if(slots[slot-1]==null){ System.out.println("No appointment at Slot "+slot); return false; }
+        System.out.println("Appointment of "+slots[slot-1]+" at Slot "+slot+" cancelled.");
+        slots[slot-1]=null; return true;
+    }
+}
+
+public class HospitalAppointmentSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Appointment appt=null; int choice;
+        do{
+            System.out.println("\\n====== HOSPITAL APPOINTMENT SYSTEM ======");
+            System.out.println("1. Setup Doctor  2. View Slots  3. Book Appointment  4. Cancel Appointment  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Doctor ID: "); int id=sc.nextInt(); sc.nextLine();
+                        System.out.print("Doctor Name: "); String nm=sc.nextLine();
+                        System.out.print("Specialization: "); String sp=sc.nextLine();
+                        appt=new Appointment(id,nm,sp); System.out.println("Doctor setup done.");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2: if(appt!=null) appt.displaySlots(); else System.out.println("Setup doctor first!"); break;
+                case 3:
+                    if(appt==null){System.out.println("Setup doctor first!"); break;}
+                    sc.nextLine(); System.out.print("Patient Name: "); String pn=sc.nextLine();
+                    System.out.print("Slot No (1-5): "); int sl=sc.nextInt();
+                    appt.bookAppointment(pn,sl); break;
+                case 4:
+                    if(appt==null){System.out.println("Setup doctor first!"); break;}
+                    System.out.print("Slot No to cancel: "); appt.cancelAppointment(sc.nextInt()); break;
+                case 5:
+                    System.out.println("Total Doctors: "+Doctor.totalDoctors);
+                    System.out.println("Total Appointments: "+Appointment.totalAppointments); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:10,title:"Smart Home Device Control System",pkg:"com.smarthome.devices",iface:"Switchable, Configurable",code:
+`package com.smarthome.devices;
+import java.util.*;
+
+interface Switchable {
+    void turnOn();
+    void turnOff();
+    boolean isOn();
+}
+interface Configurable {
+    void configure(String setting, int value);
+    void displayConfig();
+}
+
+class Device {
+    protected final String deviceId; protected final String deviceName;
+    protected boolean online; protected boolean status;
+    protected static final String HOME = "Smart Home Hub";
+    static int totalDevices = 0;
+
+    public Device(String id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Device name cannot be empty.");
+        this.deviceId=id; this.deviceName=nm; this.online=true; this.status=false; totalDevices++;
+    }
+    public void displayDevice() {
+        System.out.println("Home: "+HOME+" | ID: "+deviceId+" | Name: "+deviceName+" | Status: "+(status?"ON":"OFF")+" | Online: "+online);
+    }
+    protected void checkOnline() {
+        if(!online) throw new RuntimeException("Error: Device '"+deviceName+"' is offline!");
+    }
+}
+
+class Light extends Device implements Switchable, Configurable {
+    private int brightness = 50; // 0-100
+    public Light(String id, String nm) {
+        super(id,nm);
+    }
+
+    @Override public void turnOn() {
+        checkOnline();
+        status=true;
+        System.out.println(deviceName+" Light turned ON.");
+    }
+    @Override public void turnOff() {
+        checkOnline();
+        status=false;
+        System.out.println(deviceName+" Light turned OFF.");
+    }
+    @Override public boolean isOn() {
+        return status;
+    }
+
+    @Override public void configure(String setting, int value){
+        checkOnline();
+        if(!setting.equalsIgnoreCase("brightness")) throw new IllegalArgumentException("Light supports only 'brightness' setting.");
+        if(value<0||value>100) throw new IllegalArgumentException("Brightness must be 0-100.");
+        this.brightness=value; System.out.println(deviceName+" brightness set to "+brightness+"%");
+    }
+    @Override public void displayConfig() {
+        displayDevice();
+        System.out.println("Brightness: "+brightness+"%");
+    }
+}
+
+class Fan extends Device implements Switchable, Configurable {
+    private int speed = 3; // 1-5
+    public Fan(String id, String nm) {
+        super(id,nm);
+    }
+
+    @Override public void turnOn() {
+        checkOnline();
+        status=true;
+        System.out.println(deviceName+" Fan turned ON.");
+    }
+    @Override public void turnOff() {
+        checkOnline();
+        status=false;
+        System.out.println(deviceName+" Fan turned OFF.");
+    }
+    @Override public boolean isOn() {
+        return status;
+    }
+
+    @Override public void configure(String setting, int value){
+        checkOnline();
+        if(!setting.equalsIgnoreCase("speed")) throw new IllegalArgumentException("Fan supports only 'speed' setting.");
+        if(value<1||value>5) throw new IllegalArgumentException("Speed must be between 1 and 5.");
+        this.speed=value; System.out.println(deviceName+" speed set to "+speed);
+    }
+    @Override public void displayConfig() {
+        displayDevice();
+        System.out.println("Speed: "+speed);
+    }
+}
+
+public class SmartHomeSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        Light light=new Light("L001","Living Room"); Fan fan=new Fan("F001","Bedroom"); int choice;
+        do{
+            System.out.println("\\n====== SMART HOME DEVICE CONTROL ======");
+            System.out.println("1. Light ON  2. Light OFF  3. Set Brightness");
+            System.out.println("4. Fan ON    5. Fan OFF    6. Set Fan Speed");
+            System.out.println("7. View All  8. Toggle Light Offline  9. Total Devices  10. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            try{
+                switch(choice){
+                    case 1:  light.turnOn(); break;
+                    case 2:  light.turnOff(); break;
+                    case 3:  System.out.print("Brightness (0-100): "); light.configure("brightness",sc.nextInt()); break;
+                    case 4:  fan.turnOn(); break;
+                    case 5:  fan.turnOff(); break;
+                    case 6:  System.out.print("Speed (1-5): "); fan.configure("speed",sc.nextInt()); break;
+                    case 7:  light.displayConfig(); fan.displayConfig(); break;
+                    case 8:  light.online=!light.online; System.out.println("Light online: "+light.online); break;
+                    case 9:  System.out.println("Total Devices: "+Device.totalDevices); break;
+                    case 10: System.out.println("Exiting..."); break;
+                    default: System.out.println("Invalid Choice!");
+                }
+            }catch(RuntimeException|IllegalArgumentException e){ System.out.println(e.getMessage()); }
+        }while(choice!=10);
+        sc.close();
+    }
+}`
+},
+{id:11,title:"Airline Ticketing System",pkg:"com.airline.booking",iface:"CheckIn",code:
+`package com.airline.booking;
+import java.util.*;
+
+interface CheckIn {
+    boolean checkIn(String passengerId);
+    boolean cancelTicket(String passengerId);
+}
+
+class Airline {
+    protected static final String AIRLINE_NAME = "Sky Wings Airlines";
+    public void displayAirline() {
+        System.out.println("Airline: " + AIRLINE_NAME);
+    }
+}
+
+class Flight extends Airline {
+    protected final String flightNo; protected final String source; protected final String destination;
+    protected final int totalSeats; protected int availSeats;
+    static int totalFlights = 0;
+
+    public Flight(String fno, String src, String dest, int seats){
+        if(seats<=0) throw new IllegalArgumentException("Seats must be positive.");
+        this.flightNo=fno; this.source=src; this.destination=dest;
+        this.totalSeats=seats; this.availSeats=seats; totalFlights++;
+    }
+    public void displayFlight(){
+        displayAirline();
+        System.out.println("Flight: "+flightNo+" | "+source+" -> "+destination+" | Seats Avail: "+availSeats+"/"+totalSeats);
+    }
+}
+
+class Passenger extends Airline {
+    protected final String passengerId; protected final String name; protected final int age;
+    static int totalPassengers = 0;
+    public Passenger(String pid, String nm, int ag){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Passenger name cannot be empty.");
+        if(ag<2||ag>120) throw new IllegalArgumentException("Invalid passenger age.");
+        this.passengerId=pid; this.name=nm; this.age=ag; totalPassengers++;
+    }
+    public void display() {
+        System.out.println("Passenger: "+passengerId+" | "+name+" | Age: "+age);
+    }
+}
+
+class Ticket extends Flight implements CheckIn {
+    private final Map<String,String> bookedSeats = new HashMap<>();
+    private final double farePerSeat;
+    static int totalTickets = 0;
+
+    public Ticket(String fno, String src, String dest, int seats, double fare){
+        super(fno,src,dest,seats);
+        if(fare<0) throw new IllegalArgumentException("Fare cannot be negative.");
+        this.farePerSeat=fare;
+    }
+
+    @Override public boolean checkIn(String passengerId){
+        if(bookedSeats.containsKey(passengerId)){ System.out.println("Error: Double booking! Passenger already has a ticket."); return false; }
+        if(availSeats<=0){ System.out.println("Error: Flight overbooked! No seats available."); return false; }
+        String seatNo = "S"+(totalSeats-availSeats+1);
+        bookedSeats.put(passengerId, seatNo); availSeats--; totalTickets++;
+        System.out.println("CheckIn successful! Seat: "+seatNo+" | Fare: Rs."+farePerSeat);
+        return true;
+    }
+
+    @Override public boolean cancelTicket(String passengerId){
+        if(!bookedSeats.containsKey(passengerId)){ System.out.println("No ticket found for: "+passengerId); return false; }
+        bookedSeats.remove(passengerId); availSeats++;
+        System.out.println("Ticket cancelled for "+passengerId); return true;
+    }
+
+    public void displayManifest(){
+        displayFlight(); System.out.println("Booked Passengers: "+bookedSeats);
+    }
+}
+
+public class AirlineTicketingSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Ticket ticket=null; int choice;
+        do{
+            System.out.println("\\n====== AIRLINE TICKETING SYSTEM ======");
+            System.out.println("1. Setup Flight  2. Check-In  3. Cancel Ticket  4. View Manifest  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Flight No: "); String fn=sc.nextLine();
+                        System.out.print("Source: "); String src=sc.nextLine();
+                        System.out.print("Destination: "); String dest=sc.nextLine();
+                        System.out.print("Total Seats: "); int s=sc.nextInt();
+                        System.out.print("Fare/Seat: "); double f=sc.nextDouble();
+                        ticket=new Ticket(fn,src,dest,s,f); System.out.println("Flight setup done.");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    if(ticket==null){System.out.println("Setup flight first!"); break;}
+                    sc.nextLine(); System.out.print("Passenger ID: "); ticket.checkIn(sc.nextLine()); break;
+                case 3:
+                    if(ticket==null){System.out.println("Setup flight first!"); break;}
+                    sc.nextLine(); System.out.print("Passenger ID: "); ticket.cancelTicket(sc.nextLine()); break;
+                case 4: if(ticket!=null) ticket.displayManifest(); else System.out.println("No flight setup!"); break;
+                case 5:
+                    System.out.println("Total Flights: "+Flight.totalFlights);
+                    System.out.println("Total Passengers: "+Passenger.totalPassengers);
+                    System.out.println("Total Tickets: "+Ticket.totalTickets); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:12,title:"Online Quiz Management System",pkg:"com.quiz.app",iface:"Scorable",code:
+`package com.quiz.app;
+import java.util.*;
+
+interface Scorable {
+    int calculateScore();
+    void displayResult();
+}
+
+class Question {
+    private final int qId; private final String qText;
+    private final String[] options; private final int correctOption;
+    static int totalQuestions = 0;
+
+    public Question(int id, String text, String[] opts, int correct){
+        if(opts.length!=4) throw new IllegalArgumentException("Must have exactly 4 options.");
+        if(correct<1||correct>4) throw new IllegalArgumentException("Correct option must be 1-4.");
+        this.qId=id; this.qText=text; this.options=opts; this.correctOption=correct; totalQuestions++;
+    }
+    public void display(){
+        System.out.println("Q"+qId+": "+qText);
+        for(int i=0;i<options.length;i++) System.out.println("  "+(i+1)+". "+options[i]);
+    }
+    public boolean checkAnswer(int ans) {
+        return ans==correctOption;
+    }
+}
+
+class User {
+    protected final String userId; protected final String userName;
+    static int totalUsers = 0;
+    public User(String id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Username cannot be empty.");
+        this.userId=id; this.userName=nm; totalUsers++;
+    }
+}
+
+class Quiz extends User implements Scorable {
+    private final List<Question> questions = new ArrayList<>();
+    private final int[] userAnswers;
+    private int score = 0; private boolean attempted = false;
+    private static final int MAX_QUESTIONS = 5;
+
+    public Quiz(String id, String nm) {
+        super(id,nm);
+        this.userAnswers=new int[MAX_QUESTIONS];
+    }
+
+    public void addQuestion(Question q){
+        if(questions.size()>=MAX_QUESTIONS){ System.out.println("Max "+MAX_QUESTIONS+" questions allowed!"); return; }
+        questions.add(q); System.out.println("Question added.");
+    }
+
+    public void startQuiz(Scanner sc){
+        if(questions.isEmpty()){ System.out.println("No questions added!"); return; }
+        System.out.println("\\n===== QUIZ STARTED: "+userName+" =====");
+        score=0;
+        for(int i=0;i<questions.size();i++){
+            questions.get(i).display();
+            System.out.print("Your Answer (1-4): ");
+            int ans;
+            try{ ans=sc.nextInt(); if(ans<1||ans>4) throw new InputMismatchException(); }
+            catch(Exception e){ System.out.println("Invalid input format! Marking as 0."); sc.nextLine(); ans=0; }
+            userAnswers[i]=ans;
+            if(ans!=0&&questions.get(i).checkAnswer(ans)) score++;
+        }
+        attempted=true; System.out.println("Quiz submitted!");
+    }
+
+    @Override public int calculateScore() {
+        return score;
+    }
+
+    @Override public void displayResult(){
+        if(!attempted){ System.out.println("Quiz not attempted yet!"); return; }
+        int total=questions.size();
+        System.out.println("\\n===== QUIZ RESULT =====");
+        System.out.println("User   : "+userName);
+        System.out.println("Score  : "+score+"/"+total);
+        System.out.println("Grade  : "+(score==total?"A+ (Perfect)":score>=(total*0.7)?"A (Pass)":"F (Fail)"));
+        System.out.println("=======================");
+    }
+}
+
+public class OnlineQuizSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Quiz quiz=null; int choice;
+        do{
+            System.out.println("\\n====== ONLINE QUIZ SYSTEM ======");
+            System.out.println("1. Create User  2. Add Question  3. Start Quiz  4. View Result  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("User ID: "); String uid=sc.nextLine();
+                        System.out.print("Username: "); String unm=sc.nextLine();
+                        quiz=new Quiz(uid,unm); System.out.println("User created!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    if(quiz==null){System.out.println("Create user first!"); break;}
+                    try{
+                        sc.nextLine();
+                        System.out.print("Q ID: "); int qid=sc.nextInt(); sc.nextLine();
+                        System.out.print("Question: "); String qt=sc.nextLine();
+                        String[] opts=new String[4];
+                        for(int i=0;i<4;i++){ System.out.print("Option "+(i+1)+": "); opts[i]=sc.nextLine(); }
+                        System.out.print("Correct Option (1-4): "); int co=sc.nextInt();
+                        quiz.addQuestion(new Question(qid,qt,opts,co));
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3: if(quiz!=null) quiz.startQuiz(sc); else System.out.println("Create user first!"); break;
+                case 4: if(quiz!=null) quiz.displayResult(); else System.out.println("Create user first!"); break;
+                case 5:
+                    System.out.println("Total Questions: "+Question.totalQuestions);
+                    System.out.println("Total Users: "+User.totalUsers); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:13,title:"Customer Feedback and Rating System",pkg:"com.feedback.system",iface:"Reviewable",code:
+`package com.feedback.system;
+import java.util.*;
+
+interface Reviewable {
+    void addReview(String customerId, int rating, String comment);
+    double getAverageRating();
+}
+
+class FeedbackEntity {
+    protected static final String PLATFORM = "RateIt Platform";
+    public void displayPlatform() {
+        System.out.println("Platform: " + PLATFORM);
+    }
+}
+
+class Customer extends FeedbackEntity {
+    protected final String customerId; protected final String customerName;
+    static int totalCustomers = 0;
+    public Customer(String id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Customer name cannot be empty.");
+        this.customerId=id; this.customerName=nm; totalCustomers++;
+    }
+    public String getId() {
+        return customerId;
+    }
+    public void display() {
+        displayPlatform();
+        System.out.println("Customer: "+customerId+" | "+customerName);
+    }
+}
+
+class Feedback {
+    private final String customerId; private final int rating; private final String comment;
+    public Feedback(String cid, int r, String c){
+        if(r<1||r>5) throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        if(c==null||c.isEmpty()) throw new IllegalArgumentException("Review cannot be null/empty.");
+        this.customerId=cid; this.rating=r; this.comment=c;
+    }
+    public int getRating() {
+        return rating;
+    }
+    public String getCustomerId() {
+        return customerId;
+    }
+    public void display() {
+        System.out.println("Customer: "+customerId+" | Rating: "+rating+"/5 | Comment: "+comment);
+    }
+}
+
+class Product extends FeedbackEntity implements Reviewable {
+    private final int productId; private final String productName;
+    private final List<Feedback> reviews = new ArrayList<>();
+    private final Set<String> reviewedBy = new HashSet<>();
+    static int totalProducts = 0;
+
+    public Product(int id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Product name cannot be empty.");
+        this.productId=id; this.productName=nm; totalProducts++;
+    }
+
+    @Override public void addReview(String cid, int rating, String comment){
+        if(reviewedBy.contains(cid)){ System.out.println("Error: Duplicate feedback! Customer already reviewed this product."); return; }
+        reviews.add(new Feedback(cid,rating,comment)); reviewedBy.add(cid);
+        System.out.println("Review added! Rating: "+rating+"/5");
+    }
+
+    @Override public double getAverageRating(){
+        if(reviews.isEmpty()) return 0;
+        int sum=0; for(Feedback f:reviews) sum+=f.getRating(); return (double)sum/reviews.size();
+    }
+
+    public void displayProduct(){
+        displayPlatform();
+        System.out.println("Product ID: "+productId+" | Name: "+productName);
+        System.out.printf("Avg Rating: %.2f/5 (%d reviews)%n", getAverageRating(), reviews.size());
+    }
+    public void displayAllReviews() {
+        for(Feedback f:reviews) f.display();
+    }
+}
+
+public class CustomerFeedbackSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        List<Product> products=new ArrayList<>(); List<Customer> customers=new ArrayList<>(); int choice;
+        do{
+            System.out.println("\\n====== CUSTOMER FEEDBACK SYSTEM ======");
+            System.out.println("1. Add Product  2. Add Customer  3. Add Review  4. View Product  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        System.out.print("Product ID: "); int pid=sc.nextInt(); sc.nextLine();
+                        System.out.print("Product Name: "); String pn=sc.nextLine();
+                        products.add(new Product(pid,pn)); System.out.println("Product added!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    try{
+                        sc.nextLine(); System.out.print("Customer ID: "); String cid=sc.nextLine();
+                        System.out.print("Name: "); String cnm=sc.nextLine();
+                        customers.add(new Customer(cid,cnm)); System.out.println("Customer added!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3:
+                    if(products.isEmpty()||customers.isEmpty()){System.out.println("Add products and customers first!"); break;}
+                    try{
+                        System.out.print("Product Index (1-"+products.size()+"): "); int pi=sc.nextInt()-1; sc.nextLine();
+                        System.out.print("Customer ID: "); String cid2=sc.nextLine();
+                        System.out.print("Rating (1-5): "); int r=sc.nextInt(); sc.nextLine();
+                        System.out.print("Comment: "); String cm=sc.nextLine();
+                        products.get(pi).addReview(cid2,r,cm);
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    catch(IndexOutOfBoundsException e){System.out.println("Invalid product index!");}
+                    break;
+                case 4:
+                    for(Product p:products){ p.displayProduct(); p.displayAllReviews(); System.out.println("---"); }
+                    break;
+                case 5:
+                    System.out.println("Total Products: "+Product.totalProducts);
+                    System.out.println("Total Customers: "+Customer.totalCustomers); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:14,title:"Food Delivery App Simulation",pkg:"com.fooddelivery.app",iface:"Deliverable",code:
+`package com.fooddelivery.app;
+import java.util.*;
+
+interface Deliverable {
+    void placeOrder(String item, int qty);
+    void deliverOrder();
+    String trackOrder();
+}
+
+class FoodEntity {
+    protected static final String APP_NAME = "QuickBite Delivery";
+    public void displayApp() {
+        System.out.println("App: " + APP_NAME);
+    }
+}
+
+class Restaurant extends FoodEntity {
+    protected final String restId; protected final String restName; protected final String cuisine;
+    static int totalRestaurants = 0;
+    public Restaurant(String id, String nm, String cuis){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Restaurant name cannot be empty.");
+        this.restId=id; this.restName=nm; this.cuisine=cuis; totalRestaurants++;
+    }
+    public void displayRestaurant(){
+        displayApp(); System.out.println("Restaurant: "+restName+" ("+cuisine+") | ID: "+restId);
+    }
+}
+
+class DeliveryPerson extends FoodEntity {
+    private final String dpId; private final String dpName; private boolean available;
+    static int totalDeliveryPersons = 0;
+    public DeliveryPerson(String id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Delivery person name cannot be empty.");
+        this.dpId=id; this.dpName=nm; this.available=true; totalDeliveryPersons++;
+    }
+    public boolean isAvailable() {
+        return available;
+    }
+    public void setAvailable(boolean a) {
+        this.available=a;
+    }
+    public String getName() {
+        return dpName;
+    }
+}
+
+class Order extends Restaurant implements Deliverable {
+    private final String orderId; private String item; private int qty;
+    private String status="NOT PLACED";
+    private DeliveryPerson assignedDP=null;
+    static int totalOrders=0;
+
+    public Order(String oid, String rid, String rnm, String cuis){
+        super(rid,rnm,cuis); this.orderId=oid;
+    }
+
+    @Override public void placeOrder(String item, int qty){
+        if(item==null||item.isEmpty()) throw new IllegalArgumentException("Item name cannot be empty.");
+        if(qty<=0) throw new IllegalArgumentException("Quantity must be positive.");
+        this.item=item; this.qty=qty; this.status="PLACED"; totalOrders++;
+        System.out.println("Order "+orderId+" placed: "+qty+"x "+item);
+    }
+
+    @Override public void deliverOrder(){
+        if(status.equals("NOT PLACED")){ System.out.println("No order placed yet!"); return; }
+        if(assignedDP==null||!assignedDP.isAvailable()){ System.out.println("Error: No delivery person available!"); return; }
+        status="DELIVERED"; assignedDP.setAvailable(false);
+        System.out.println("Order "+orderId+" delivered by "+assignedDP.getName()+"!");
+    }
+
+    @Override public String trackOrder(){
+        return "Order "+orderId+" | Item: "+item+" (x"+qty+") | Status: "+status
+                +(assignedDP!=null?" | DP: "+assignedDP.getName():"");
+    }
+
+    public void assignDeliveryPerson(DeliveryPerson dp){
+        if(!dp.isAvailable()){ System.out.println("Delivery person not available!"); return; }
+        this.assignedDP=dp; this.status="OUT FOR DELIVERY";
+        System.out.println("Assigned "+dp.getName()+" to Order "+orderId);
+    }
+}
+
+public class FoodDeliveryApp {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        Order order=null; DeliveryPerson dp=new DeliveryPerson("DP001","Ramesh"); int choice;
+        do{
+            System.out.println("\\n====== FOOD DELIVERY APP ======");
+            System.out.println("1. Setup Order  2. Place Order  3. Assign Delivery  4. Deliver  5. Track  6. Stats  7. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Order ID: "); String oid=sc.nextLine();
+                        System.out.print("Restaurant ID: "); String rid=sc.nextLine();
+                        System.out.print("Restaurant Name: "); String rnm=sc.nextLine();
+                        System.out.print("Cuisine: "); String cuis=sc.nextLine();
+                        order=new Order(oid,rid,rnm,cuis); System.out.println("Order setup done.");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    if(order==null){System.out.println("Setup order first!"); break;}
+                    try{
+                        sc.nextLine(); System.out.print("Item: "); String it=sc.nextLine();
+                        System.out.print("Qty: "); int q=sc.nextInt();
+                        order.placeOrder(it,q);
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3: if(order!=null) order.assignDeliveryPerson(dp); else System.out.println("Setup order first!"); break;
+                case 4: if(order!=null) order.deliverOrder(); else System.out.println("Setup order first!"); break;
+                case 5: if(order!=null) System.out.println(order.trackOrder()); else System.out.println("No order!"); break;
+                case 6:
+                    System.out.println("Total Restaurants: "+Restaurant.totalRestaurants);
+                    System.out.println("Total Orders: "+Order.totalOrders);
+                    System.out.println("Delivery Person Available: "+dp.isAvailable()); break;
+                case 7: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=7);
+        sc.close();
+    }
+}`
+},
+{id:15,title:"Parcel Tracking System",pkg:"com.parcel.tracking",iface:"Trackable",code:
+`package com.parcel.tracking;
+import java.util.*;
+
+interface Trackable {
+    void updateStatus(String location, String status);
+    String getTrackingInfo();
+}
+
+class TrackingEntity {
+    protected static final String COURIER_NAME = "SwiftPost Logistics";
+    public void displayCourier() {
+        System.out.println("Courier: " + COURIER_NAME);
+    }
+}
+
+class Location {
+    private final String city; private final String state;
+    public Location(String city, String state){
+        if(city==null||city.isEmpty()) throw new IllegalArgumentException("City cannot be empty.");
+        this.city=city; this.state=state;
+    }
+    public String toString() {
+        return city+", "+state;
+    }
+}
+
+class Parcel extends TrackingEntity implements Trackable {
+    private final String trackingNo; private final String senderName; private final String receiverName;
+    private final double weightKg;
+    private String currentStatus = "BOOKED";
+    private Location currentLocation;
+    private final List<String> history = new ArrayList<>();
+    static int totalParcels = 0;
+
+    public Parcel(String tno, String sender, String receiver, double weight){
+        if(tno==null||tno.isEmpty()) throw new IllegalArgumentException("Tracking number cannot be empty.");
+        if(weight<=0) throw new IllegalArgumentException("Weight must be positive.");
+        this.trackingNo=tno; this.senderName=sender; this.receiverName=receiver; this.weightKg=weight;
+        history.add("BOOKED at origin."); totalParcels++;
+    }
+
+    @Override public void updateStatus(String loc, String status){
+        if(loc==null||loc.isEmpty()) throw new IllegalArgumentException("Missing location update!");
+        if(status==null||status.isEmpty()) throw new IllegalArgumentException("Status cannot be empty.");
+        String[] parts=loc.split(",");
+        this.currentLocation=new Location(parts[0].trim(), parts.length>1?parts[1].trim():"N/A");
+        this.currentStatus=status;
+        String entry=status+" at "+currentLocation;
+        if(history.contains(entry)){ System.out.println("Duplicate status update ignored."); return; }
+        history.add(entry); System.out.println("Status updated: "+entry);
+    }
+
+    @Override public String getTrackingInfo(){
+        return "Tracking No: "+trackingNo+" | Status: "+currentStatus
+                +" | Location: "+(currentLocation!=null?currentLocation:"Origin")
+                +" | Weight: "+weightKg+"kg";
+    }
+
+    public void displayFull(){
+        displayCourier();
+        System.out.println("Tracking No : "+trackingNo);
+        System.out.println("Sender      : "+senderName);
+        System.out.println("Receiver    : "+receiverName);
+        System.out.println("Weight      : "+weightKg+" kg");
+        System.out.println("Status      : "+currentStatus);
+        System.out.println("Location    : "+(currentLocation!=null?currentLocation:"Origin"));
+        System.out.println("--- History ---");
+        for(String h:history) System.out.println(" > "+h);
+    }
+}
+
+public class ParcelTrackingSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Parcel parcel=null; int choice;
+        do{
+            System.out.println("\\n====== PARCEL TRACKING SYSTEM ======");
+            System.out.println("1. Create Parcel  2. Update Status  3. Track Parcel  4. Full Details  5. Total Parcels  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Tracking No: "); String tno=sc.nextLine();
+                        System.out.print("Sender: "); String snd=sc.nextLine();
+                        System.out.print("Receiver: "); String rcv=sc.nextLine();
+                        System.out.print("Weight (kg): "); double wt=sc.nextDouble();
+                        parcel=new Parcel(tno,snd,rcv,wt); System.out.println("Parcel created!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    if(parcel==null){System.out.println("Create parcel first!"); break;}
+                    try{
+                        sc.nextLine(); System.out.print("Location (City, State): "); String loc=sc.nextLine();
+                        System.out.print("Status (e.g. IN TRANSIT / DELIVERED): "); String st=sc.nextLine();
+                        parcel.updateStatus(loc,st);
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3: if(parcel!=null) System.out.println(parcel.getTrackingInfo()); else System.out.println("No parcel!"); break;
+                case 4: if(parcel!=null) parcel.displayFull(); else System.out.println("No parcel!"); break;
+                case 5: System.out.println("Total Parcels: "+Parcel.totalParcels); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:16,title:"Electricity Bill Generator",pkg:"com.utility.billing",iface:"Billable",code:
+`package com.utility.billing;
+import java.util.Scanner;
+
+interface Billable {
+    double calculateBill();
+    void displayBill();
+}
+
+class UtilityEntity {
+    protected static final String UTILITY = "Maharashtra State Electricity Board";
+    public void displayUtility() {
+        System.out.println("Utility: " + UTILITY);
+    }
+}
+
+class Meter extends UtilityEntity {
+    protected final String meterId; protected double prevReading; protected double currReading;
+    static int totalMeters = 0;
+
+    public Meter(String id, double prev, double curr){
+        if(id==null||id.isEmpty()) throw new IllegalArgumentException("Meter ID cannot be empty.");
+        if(prev<0||curr<0) throw new IllegalArgumentException("Meter readings cannot be negative.");
+        if(curr<prev) throw new IllegalArgumentException("Current reading cannot be less than previous reading.");
+        this.meterId=id; this.prevReading=prev; this.currReading=curr; totalMeters++;
+    }
+    public double getUnitsConsumed() {
+        return currReading - prevReading;
+    }
+}
+
+class Customer extends Meter {
+    private final int custId; private final String custName;
+    static int totalCustomers = 0;
+    public Customer(int id, String nm, String mId, double prev, double curr){
+        super(mId,prev,curr);
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Customer name cannot be empty.");
+        this.custId=id; this.custName=nm; totalCustomers++;
+    }
+    public void displayCustomer(){
+        displayUtility();
+        System.out.println("Customer ID: "+custId+" | Name: "+custName+" | Meter: "+meterId);
+        System.out.println("Prev Reading: "+prevReading+" | Curr Reading: "+currReading+" | Units: "+getUnitsConsumed());
+    }
+}
+
+class Bill extends Customer implements Billable {
+    static int totalBills = 0;
+
+    public Bill(int id, String nm, String mId, double prev, double curr){
+        super(id,nm,mId,prev,curr); totalBills++;
+    }
+
+    @Override public double calculateBill(){
+        double units = getUnitsConsumed();
+        if(units<0) throw new ArithmeticException("Invalid units consumed!");
+        double charge = 0;
+        // Slab-based billing
+        if(units<=100)       charge = units * 1.50;
+        else if(units<=300)  charge = 100*1.50 + (units-100)*2.50;
+        else if(units<=500)  charge = 100*1.50 + 200*2.50 + (units-300)*4.00;
+        else                 charge = 100*1.50 + 200*2.50 + 200*4.00 + (units-500)*6.00;
+        return charge;
+    }
+
+    @Override public void displayBill(){
+        System.out.println("\\n========== ELECTRICITY BILL ==========");
+        displayCustomer();
+        double units=getUnitsConsumed(), charge=calculateBill();
+        System.out.println("Slab: "+(units<=100?"0-100 units @Rs.1.50":units<=300?"101-300 units @Rs.2.50":units<=500?"301-500 @Rs.4.00":"500+ @Rs.6.00"));
+        System.out.printf("Total Charge : Rs.%.2f%n", charge);
+        System.out.printf("Fixed Charge : Rs.100.00%n");
+        System.out.printf("Net Payable  : Rs.%.2f%n", charge+100);
+        System.out.println("======================================");
+    }
+}
+
+public class ElectricityBillGenerator {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Bill bill=null; int choice;
+        do{
+            System.out.println("\\n====== ELECTRICITY BILL GENERATOR ======");
+            System.out.println("1. Generate Bill  2. Display Bill  3. Total Bills  4. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        System.out.print("Customer ID: "); int id=sc.nextInt(); sc.nextLine();
+                        System.out.print("Name: "); String nm=sc.nextLine();
+                        System.out.print("Meter ID: "); String mid=sc.nextLine();
+                        System.out.print("Previous Reading: "); double prev=sc.nextDouble();
+                        System.out.print("Current Reading: "); double curr=sc.nextDouble();
+                        bill=new Bill(id,nm,mid,prev,curr); System.out.println("Bill generated!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    catch(Exception e){System.out.println("Invalid Input!"); sc.nextLine();}
+                    break;
+                case 2: if(bill!=null) bill.displayBill(); else System.out.println("Generate bill first!"); break;
+                case 3: System.out.println("Total Bills: "+Bill.totalBills); break;
+                case 4: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=4);
+        sc.close();
+    }
+}`
+},
+{id:17,title:"Event Management System",pkg:"com.events.manager",iface:"Schedulable",code:
+`package com.events.manager;
+import java.util.*;
+
+interface Schedulable {
+    boolean scheduleEvent(String date, String time);
+    boolean isAvailable(String date);
+}
+
+class EventEntity {
+    protected static final String COMPANY = "EventPro Management";
+    public void displayCompany() {
+        System.out.println("Company: " + COMPANY);
+    }
+}
+
+class Venue extends EventEntity {
+    protected final String venueId; protected final String venueName; protected final int capacity;
+    protected final List<String> bookedDates = new ArrayList<>();
+    static int totalVenues = 0;
+
+    public Venue(String id, String nm, int cap){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Venue name cannot be empty.");
+        if(cap<=0) throw new IllegalArgumentException("Capacity must be positive.");
+        this.venueId=id; this.venueName=nm; this.capacity=cap; totalVenues++;
+    }
+    public void display() {
+        displayCompany();
+        System.out.println("Venue: "+venueName+" | ID: "+venueId+" | Capacity: "+capacity);
+    }
+}
+
+class Attendee extends EventEntity {
+    protected final String attendeeId; protected final String attendeeName;
+    static int totalAttendees = 0;
+    public Attendee(String id, String nm){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Attendee name cannot be empty.");
+        this.attendeeId=id; this.attendeeName=nm; totalAttendees++;
+    }
+}
+
+class Event extends Venue implements Schedulable {
+    private final String eventId; private final String eventName;
+    private final List<String> attendees = new ArrayList<>();
+    private final int maxAttendees;
+    private final Map<String,String> schedule = new HashMap<>();
+    static int totalEvents = 0;
+
+    public Event(String eid, String enm, String vid, String vnm, int vcap, int maxAtt){
+        super(vid,vnm,vcap);
+        if(enm==null||enm.isEmpty()) throw new IllegalArgumentException("Event name cannot be empty.");
+        if(maxAtt>vcap) throw new IllegalArgumentException("Max attendees cannot exceed venue capacity.");
+        this.eventId=eid; this.eventName=enm; this.maxAttendees=maxAtt; totalEvents++;
+    }
+
+    @Override public boolean scheduleEvent(String date, String time){
+        if(date==null||date.isEmpty()) throw new IllegalArgumentException("Invalid date!");
+        if(!isAvailable(date)){ System.out.println("Error: Venue already booked on "+date+"!"); return false; }
+        schedule.put(date,time); bookedDates.add(date);
+        System.out.println("Event '"+eventName+"' scheduled on "+date+" at "+time); return true;
+    }
+
+    @Override public boolean isAvailable(String date) {
+        return !bookedDates.contains(date);
+    }
+
+    public void addAttendee(String name){
+        if(attendees.size()>=maxAttendees){ System.out.println("Error: Event overbooking! Max attendees reached."); return; }
+        if(attendees.contains(name)){ System.out.println("Error: Double booking! "+name+" already registered."); return; }
+        attendees.add(name); System.out.println(name+" registered for "+eventName);
+    }
+
+    public void displayEvent(){
+        display();
+        System.out.println("Event: "+eventName+" | ID: "+eventId+" | Attendees: "+attendees.size()+"/"+maxAttendees);
+        System.out.println("Schedule: "+schedule);
+        System.out.println("Registered: "+attendees);
+    }
+}
+
+public class EventManagementSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Event event=null; int choice;
+        do{
+            System.out.println("\\n====== EVENT MANAGEMENT SYSTEM ======");
+            System.out.println("1. Create Event  2. Schedule Event  3. Add Attendee  4. View Event  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Event ID: "); String eid=sc.nextLine();
+                        System.out.print("Event Name: "); String enm=sc.nextLine();
+                        System.out.print("Venue ID: "); String vid=sc.nextLine();
+                        System.out.print("Venue Name: "); String vnm=sc.nextLine();
+                        System.out.print("Venue Capacity: "); int vc=sc.nextInt();
+                        System.out.print("Max Attendees: "); int ma=sc.nextInt();
+                        event=new Event(eid,enm,vid,vnm,vc,ma); System.out.println("Event created!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 2:
+                    if(event==null){System.out.println("Create event first!"); break;}
+                    try{
+                        sc.nextLine(); System.out.print("Date (DD-MM-YYYY): "); String dt=sc.nextLine();
+                        System.out.print("Time: "); String tm=sc.nextLine();
+                        event.scheduleEvent(dt,tm);
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3:
+                    if(event==null){System.out.println("Create event first!"); break;}
+                    sc.nextLine(); System.out.print("Attendee Name: "); event.addAttendee(sc.nextLine()); break;
+                case 4: if(event!=null) event.displayEvent(); else System.out.println("No event!"); break;
+                case 5:
+                    System.out.println("Total Events: "+Event.totalEvents);
+                    System.out.println("Total Venues: "+Venue.totalVenues); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:18,title:"Hotel Room Booking System",pkg:"com.hotel.booking",iface:"Bookable",code:
+`package com.hotel.booking;
+import java.util.*;
+
+interface Bookable {
+    boolean bookRoom(String customerId, int nights);
+    boolean checkOut(String customerId);
+}
+
+class HotelEntity {
+    protected static final String HOTEL = "Grand Palace Hotel";
+    public void displayHotel() {
+        System.out.println("Hotel: " + HOTEL);
+    }
+}
+
+class Customer extends HotelEntity {
+    protected final String custId; protected final String custName; protected final String phone;
+    static int totalCustomers = 0;
+    public Customer(String id, String nm, String ph){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Customer name cannot be empty.");
+        if(ph==null||ph.length()!=10) throw new IllegalArgumentException("Invalid phone number (must be 10 digits).");
+        this.custId=id; this.custName=nm; this.phone=ph; totalCustomers++;
+    }
+    public String getId() {
+        return custId;
+    }
+    public String getName() {
+        return custName;
+    }
+    public void display() {
+        displayHotel();
+        System.out.println("Customer: "+custId+" | "+custName+" | Phone: "+phone);
+    }
+}
+
+class Room extends HotelEntity implements Bookable {
+    private final int roomNo; private final String roomType; private final double pricePerNight;
+    private boolean available = true;
+    private final Map<String,Integer> bookings = new HashMap<>();
+    static int totalRooms = 0;
+
+    public Room(int no, String type, double price){
+        if(price<0) throw new IllegalArgumentException("Price cannot be negative.");
+        this.roomNo=no; this.roomType=type; this.pricePerNight=price; totalRooms++;
+    }
+
+    @Override public boolean bookRoom(String custId, int nights){
+        if(!available){ System.out.println("Error: Room "+roomNo+" not available!"); return false; }
+        if(nights<=0){ System.out.println("Error: Invalid number of nights."); return false; }
+        if(custId==null||custId.isEmpty()){ System.out.println("Error: Invalid customer info."); return false; }
+        available=false; bookings.put(custId,nights);
+        System.out.printf("Room %d (%s) booked for %s. Nights: %d | Total: Rs.%.2f%n",
+                roomNo,roomType,custId,nights,pricePerNight*nights);
+        return true;
+    }
+
+    @Override public boolean checkOut(String custId){
+        if(!bookings.containsKey(custId)){ System.out.println("No booking found for "+custId); return false; }
+        int nights=bookings.remove(custId); available=true;
+        System.out.printf("Checkout successful! Room %d | %d nights | Bill: Rs.%.2f%n",roomNo,nights,pricePerNight*nights);
+        return true;
+    }
+
+    public void display(){
+        displayHotel();
+        System.out.println("Room: "+roomNo+" | Type: "+roomType+" | Price: Rs."+pricePerNight+"/night | Status: "+(available?"Available":"Booked"));
+    }
+}
+
+public class HotelBookingSystem {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        List<Room> rooms=new ArrayList<>(); List<Customer> customers=new ArrayList<>(); int choice;
+        rooms.add(new Room(101,"Standard",1500));
+        rooms.add(new Room(201,"Deluxe",3000));
+        rooms.add(new Room(301,"Suite",6000));
+
+        do{
+            System.out.println("\\n====== HOTEL BOOKING SYSTEM ======");
+            System.out.println("1. View Rooms  2. Add Customer  3. Book Room  4. Checkout  5. Stats  6. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1: for(Room r:rooms) r.display(); break;
+                case 2:
+                    try{
+                        sc.nextLine(); System.out.print("Customer ID: "); String cid=sc.nextLine();
+                        System.out.print("Name: "); String cnm=sc.nextLine();
+                        System.out.print("Phone (10 digits): "); String ph=sc.nextLine();
+                        customers.add(new Customer(cid,cnm,ph)); System.out.println("Customer added!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    break;
+                case 3:
+                    System.out.print("Room No (101/201/301): "); int rno=sc.nextInt(); sc.nextLine();
+                    System.out.print("Customer ID: "); String bid=sc.nextLine();
+                    System.out.print("Nights: "); int nts=sc.nextInt();
+                    rooms.stream().filter(r->r.display()==null).findFirst(); // demo
+                    for(Room r:rooms){ if(r.hashCode()==rno||(rooms.indexOf(r)+1)*100==rno){ r.bookRoom(bid,nts); break; } }
+                    // simplified: just book first available
+                    break;
+                case 4:
+                    sc.nextLine(); System.out.print("Customer ID: "); String coid=sc.nextLine();
+                    for(Room r:rooms){ r.checkOut(coid); break; }
+                    break;
+                case 5:
+                    System.out.println("Total Rooms: "+Room.totalRooms);
+                    System.out.println("Total Customers: "+Customer.totalCustomers); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=6);
+        sc.close();
+    }
+}`
+},
+{id:19,title:"Loan Eligibility Checker",pkg:"com.finance.loans",iface:"Eligible",code:
+`package com.finance.loans;
+import java.util.Scanner;
+
+interface Eligible {
+    boolean checkEligibility();
+    void displayResult();
+}
+
+class FinanceEntity {
+    protected static final String BANK = "National Finance Bank";
+    public void displayBank() {
+        System.out.println("Bank: " + BANK);
+    }
+}
+
+class CreditScore extends FinanceEntity {
+    protected final int score;
+    public CreditScore(int s){
+        if(s<300||s>900) throw new IllegalArgumentException("Invalid credit score. Must be between 300 and 900.");
+        this.score=s;
+    }
+    public int getScore() {
+        return score;
+    }
+    public String getGrade(){
+        if(score>=750) return "Excellent"; if(score>=650) return "Good";
+        if(score>=550) return "Fair"; return "Poor";
+    }
+}
+
+class Applicant extends CreditScore {
+    protected final String name; protected final int age;
+    protected final double monthlyIncome; protected final String employment;
+    static int totalApplicants = 0;
+
+    public Applicant(String nm, int ag, double inc, String emp, int score){
+        super(score);
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
+        if(ag<18||ag>65) throw new IllegalArgumentException("Age must be between 18 and 65.");
+        if(inc<0) throw new IllegalArgumentException("Income cannot be negative.");
+        if(emp==null||emp.isEmpty()) throw new IllegalArgumentException("Employment info incomplete.");
+        this.name=nm; this.age=ag; this.monthlyIncome=inc; this.employment=emp; totalApplicants++;
+    }
+
+    public void displayApplicant(){
+        displayBank();
+        System.out.println("Applicant     : " + name);
+        System.out.println("Age           : " + age);
+        System.out.printf ("Monthly Income: Rs.%.2f%n", monthlyIncome);
+        System.out.println("Employment    : " + employment);
+        System.out.println("Credit Score  : " + score + " (" + getGrade() + ")");
+    }
+}
+
+class Loan extends Applicant implements Eligible {
+    private final String loanType; private final double loanAmount; private final int tenure;
+    static int totalLoans = 0;
+
+    public Loan(String nm, int ag, double inc, String emp, int cs, String lt, double amt, int ten){
+        super(nm,ag,inc,emp,cs);
+        if(amt<=0) throw new IllegalArgumentException("Loan amount must be positive.");
+        if(ten<1) throw new IllegalArgumentException("Tenure must be at least 1 year.");
+        this.loanType=lt; this.loanAmount=amt; this.tenure=ten; totalLoans++;
+    }
+
+    @Override public boolean checkEligibility(){
+        if(score<600){ System.out.println("Reason: Credit score below 600."); return false; }
+        if(monthlyIncome<15000){ System.out.println("Reason: Income below Rs.15,000/month."); return false; }
+        double emi = (loanAmount/tenure)/12;
+        if(emi > monthlyIncome*0.4){ System.out.println("Reason: EMI exceeds 40% of monthly income."); return false; }
+        return true;
+    }
+
+    @Override public void displayResult(){
+        System.out.println("\\n========== LOAN ELIGIBILITY REPORT ==========");
+        displayApplicant();
+        System.out.println("Loan Type     : " + loanType);
+        System.out.printf ("Loan Amount   : Rs.%.2f%n", loanAmount);
+        System.out.println("Tenure        : " + tenure + " years");
+        System.out.printf ("Est. Monthly EMI: Rs.%.2f%n", (loanAmount/tenure)/12);
+        System.out.println("Eligibility   : " + (checkEligibility() ? "APPROVED" : "REJECTED"));
+        System.out.println("=============================================");
+    }
+}
+
+public class LoanEligibilityChecker {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Loan loan=null; int choice;
+        do{
+            System.out.println("\\n====== LOAN ELIGIBILITY CHECKER ======");
+            System.out.println("1. New Application  2. Check Eligibility  3. Total Applications  4. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("Name: "); String nm=sc.nextLine();
+                        System.out.print("Age: "); int ag=sc.nextInt();
+                        System.out.print("Monthly Income: "); double inc=sc.nextDouble();
+                        sc.nextLine(); System.out.print("Employment (Salaried/Self-Employed): "); String emp=sc.nextLine();
+                        System.out.print("Credit Score (300-900): "); int cs=sc.nextInt();
+                        sc.nextLine(); System.out.print("Loan Type: "); String lt=sc.nextLine();
+                        System.out.print("Loan Amount: "); double amt=sc.nextDouble();
+                        System.out.print("Tenure (years): "); int ten=sc.nextInt();
+                        loan=new Loan(nm,ag,inc,emp,cs,lt,amt,ten); System.out.println("Application submitted!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    catch(Exception e){System.out.println("Invalid Input!"); sc.nextLine();}
+                    break;
+                case 2: if(loan!=null) loan.displayResult(); else System.out.println("Submit application first!"); break;
+                case 3: System.out.println("Total Applications: "+Loan.totalLoans); break;
+                case 4: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=4);
+        sc.close();
+    }
+}`
+},
+{id:20,title:"Weather Forecasting Application",pkg:"com.weather.app",iface:"Forecastable",code:
+`package com.weather.app;
+import java.util.Scanner;
+
+interface Forecastable {
+    double getAvgTemperature();
+    double getAvgHumidity();
+    void displayForecast();
+}
+
+class WeatherEntity {
+    protected static final String SERVICE = "SkyWatch Weather Service";
+    public void displayService() {
+        System.out.println("Service: " + SERVICE);
+    }
+}
+
+class City extends WeatherEntity {
+    protected final String cityName; protected final String state;
+    static int totalCities = 0;
+    public City(String nm, String st){
+        if(nm==null||nm.isEmpty()) throw new IllegalArgumentException("City name cannot be empty.");
+        this.cityName=nm; this.state=st; totalCities++;
+    }
+    public void displayCity() {
+        displayService();
+        System.out.println("City: "+cityName+", "+state);
+    }
+}
+
+class WeatherData extends City {
+    protected final double[] temperatures; protected final double[] humidity;
+    protected final int days;
+
+    public WeatherData(String nm, String st, double[] temps, double[] hum){
+        super(nm,st);
+        if(temps==null||temps.length==0) throw new IllegalArgumentException("Temperature data missing.");
+        if(hum==null||hum.length!=temps.length) throw new IllegalArgumentException("Humidity data mismatch.");
+        for(double t:temps) if(t<-100||t>70) throw new IllegalArgumentException("Invalid temperature value: "+t);
+        this.temperatures=temps; this.humidity=hum; this.days=temps.length;
+    }
+}
+
+class Forecast extends WeatherData implements Forecastable {
+    static int totalForecasts = 0;
+    public Forecast(String nm, String st, double[] temps, double[] hum) {
+        super(nm,st,temps,hum);
+        totalForecasts++;
+    }
+
+    @Override public double getAvgTemperature(){
+        double sum=0; for(double t:temperatures) sum+=t; return sum/days;
+    }
+
+    @Override public double getAvgHumidity(){
+        double sum=0; for(double h:humidity) sum+=h; return sum/days;
+    }
+
+    private String getCondition(double temp){
+        if(temp>38) return "Very Hot"; if(temp>30) return "Hot";
+        if(temp>20) return "Pleasant"; if(temp>10) return "Cool"; return "Cold";
+    }
+
+    @Override public void displayForecast(){
+        System.out.println("\\n========== WEATHER FORECAST ==========");
+        displayCity();
+        System.out.println("Forecast Period: "+days+" Days");
+        System.out.println("--- Daily Data ---");
+        for(int i=0;i<days;i++) System.out.printf("Day %2d: Temp=%.1f°C | Humidity=%.1f%%%n",i+1,temperatures[i],humidity[i]);
+        System.out.println("--- Summary ---");
+        double avgT=getAvgTemperature(), avgH=getAvgHumidity();
+        System.out.printf("Avg Temperature: %.2f°C%n", avgT);
+        System.out.printf("Avg Humidity   : %.2f%%%n", avgH);
+        System.out.printf("Max Temp       : %.1f°C%n", java.util.Arrays.stream(temperatures).max().getAsDouble());
+        System.out.printf("Min Temp       : %.1f°C%n", java.util.Arrays.stream(temperatures).min().getAsDouble());
+        System.out.println("Condition      : "+getCondition(avgT));
+        System.out.println("======================================");
+    }
+}
+
+public class WeatherForecastingApp {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in); Forecast forecast=null; int choice;
+        do{
+            System.out.println("\\n====== WEATHER FORECASTING APPLICATION ======");
+            System.out.println("1. Add Weather Data  2. Display Forecast  3. Total Forecasts  4. Exit");
+            System.out.print("Enter Choice: "); choice=sc.nextInt();
+            switch(choice){
+                case 1:
+                    try{
+                        sc.nextLine();
+                        System.out.print("City: "); String city=sc.nextLine();
+                        System.out.print("State: "); String state=sc.nextLine();
+                        System.out.print("Number of Days: "); int d=sc.nextInt();
+                        if(d<=0) throw new IllegalArgumentException("Days must be positive.");
+                        double[] temps=new double[d], hum=new double[d];
+                        for(int i=0;i<d;i++){
+                            System.out.print("Day "+(i+1)+" Temp (°C): "); temps[i]=sc.nextDouble();
+                            System.out.print("Day "+(i+1)+" Humidity (%): "); hum[i]=sc.nextDouble();
+                        }
+                        forecast=new Forecast(city,state,temps,hum); System.out.println("Data added!");
+                    }catch(IllegalArgumentException e){System.out.println("Error: "+e.getMessage());}
+                    catch(Exception e){System.out.println("Invalid Input!"); sc.nextLine();}
+                    break;
+                case 2: if(forecast!=null) forecast.displayForecast(); else System.out.println("Add data first!"); break;
+                case 3: System.out.println("Total Forecasts: "+Forecast.totalForecasts); break;
+                case 4: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        }while(choice!=4);
+        sc.close();
+    }
+}`
+},
+{id:21,title:"Swing GUI — Student Registration Form",pkg:"javax.swing (GUI)",iface:"ActionListener",code:
+`import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class StudentRegistrationForm extends JFrame implements ActionListener {
+
+    // Components
+    private final JLabel lblTitle, lblName, lblPhone, lblEmail, lblCourse, lblResult;
+    private final JTextField txtName, txtPhone, txtEmail;
+    private final JComboBox<String> cboCourse;
+    private final JButton btnSubmit, btnClear, btnExit;
+
+    public StudentRegistrationForm() {
+        setTitle("Student Registration - MITAOE");
+        setSize(450, 380);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(null);
+        getContentPane().setBackground(new Color(240, 242, 247));
+
+        // Title
+        lblTitle = new JLabel("Student Registration Form", SwingConstants.CENTER);
+        lblTitle.setBounds(20, 10, 400, 35);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitle.setForeground(new Color(26, 35, 126));
+        add(lblTitle);
+
+        // Name
+        lblName = new JLabel("Full Name:");
+        lblName.setBounds(30, 60, 120, 25);
+        lblName.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(lblName);
+
+        txtName = new JTextField();
+        txtName.setBounds(160, 60, 240, 28);
+        txtName.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(txtName);
+
+        // Phone
+        lblPhone = new JLabel("Phone Number:");
+        lblPhone.setBounds(30, 105, 120, 25);
+        lblPhone.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(lblPhone);
+
+        txtPhone = new JTextField();
+        txtPhone.setBounds(160, 105, 240, 28);
+        txtPhone.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(txtPhone);
+
+        // Email
+        lblEmail = new JLabel("Email:");
+        lblEmail.setBounds(30, 150, 120, 25);
+        lblEmail.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(lblEmail);
+
+        txtEmail = new JTextField();
+        txtEmail.setBounds(160, 150, 240, 28);
+        txtEmail.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(txtEmail);
+
+        // Course
+        lblCourse = new JLabel("Course:");
+        lblCourse.setBounds(30, 195, 120, 25);
+        lblCourse.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(lblCourse);
+
+        String[] courses = {"Select Course","B.Tech CSE","B.Tech IT","B.Tech ENTC","B.Tech Mech","MCA"};
+        cboCourse = new JComboBox<>(courses);
+        cboCourse.setBounds(160, 195, 240, 28);
+        cboCourse.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        add(cboCourse);
+
+        // Buttons
+        btnSubmit = new JButton("Submit");
+        btnSubmit.setBounds(60, 250, 100, 35);
+        btnSubmit.setBackground(new Color(26, 35, 126));
+        btnSubmit.setForeground(Color.WHITE);
+        btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnSubmit.setFocusPainted(false);
+        btnSubmit.addActionListener(this);
+        add(btnSubmit);
+
+        btnClear = new JButton("Clear");
+        btnClear.setBounds(175, 250, 100, 35);
+        btnClear.setBackground(new Color(100, 100, 100));
+        btnClear.setForeground(Color.WHITE);
+        btnClear.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnClear.setFocusPainted(false);
+        btnClear.addActionListener(this);
+        add(btnClear);
+
+        btnExit = new JButton("Exit");
+        btnExit.setBounds(290, 250, 100, 35);
+        btnExit.setBackground(new Color(183, 28, 28));
+        btnExit.setForeground(Color.WHITE);
+        btnExit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnExit.setFocusPainted(false);
+        btnExit.addActionListener(this);
+        add(btnExit);
+
+        // Result Label
+        lblResult = new JLabel("", SwingConstants.CENTER);
+        lblResult.setBounds(20, 300, 400, 30);
+        lblResult.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        add(lblResult);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnSubmit) {
+            String name  = txtName.getText().trim();
+            String phone = txtPhone.getText().trim();
+            String email = txtEmail.getText().trim();
+            String course= (String) cboCourse.getSelectedItem();
+
+            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || course.equals("Select Course")) {
+                lblResult.setText("Please fill all fields!");
+                lblResult.setForeground(new Color(183, 28, 28));
+            } else if (!phone.matches("\\d{10}")) {
+                lblResult.setText("Invalid phone number! (10 digits required)");
+                lblResult.setForeground(new Color(183, 28, 28));
+            } else {
+                lblResult.setText("Registered: " + name + " | " + course);
+                lblResult.setForeground(new Color(27, 94, 32));
+                JOptionPane.showMessageDialog(this,
+                    "Registration Successful!\\nName: "+name+"\\nPhone: "+phone+"\\nEmail: "+email+"\\nCourse: "+course,
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (e.getSource() == btnClear) {
+            txtName.setText("");
+            txtPhone.setText("");
+            txtEmail.setText("");
+            cboCourse.setSelectedIndex(0);
+            lblResult.setText("");
+        } else if (e.getSource() == btnExit) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Exit application?", "Confirm", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) System.exit(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(StudentRegistrationForm::new);
+    }
+}`
+},
+{id:22,title:"JDBC — Complete CRUD Operations",pkg:"java.sql (JDBC)",iface:"Connection, PreparedStatement",code:
+`import java.sql.*;
+import java.util.Scanner;
+
+// SETUP: Create DB first by running this SQL:
+// CREATE DATABASE college_db;
+// USE college_db;
+
+public class JDBCCRUDOperations {
+
+    // ---- Database Connection ----
+    static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/college_db",
+            "root",
+            "your_password"
+        );
+    }
+
+    // ---- Create Table ----
+    static void createTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS students ("
+                   + "id INT PRIMARY KEY AUTO_INCREMENT, "
+                   + "name VARCHAR(100) NOT NULL, "
+                   + "course VARCHAR(100), "
+                   + "marks DOUBLE, "
+                   + "phone VARCHAR(15))";
+        try (Connection con = getConnection(); Statement st = con.createStatement()) {
+            st.executeUpdate(sql);
+            System.out.println("Table 'students' created (or already exists).");
+        } catch (SQLException e) { System.out.println("Error: " + e.getMessage()); }
+    }
+
+    // ---- INSERT ----
+    static void insertStudent(String name, String course, double marks, String phone) {
+        String sql = "INSERT INTO students (name, course, marks, phone) VALUES (?, ?, ?, ?)";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, course);
+            ps.setDouble(3, marks);
+            ps.setString(4, phone);
+            int rows = ps.executeUpdate();
+            System.out.println(rows + " row(s) inserted. Student: " + name);
+        } catch (SQLException e) { System.out.println("Insert Error: " + e.getMessage()); }
+    }
+
+    // ---- SELECT ALL ----
+    static void selectAll() {
+        String sql = "SELECT * FROM students";
+        try (Connection con = getConnection(); Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            System.out.println("\\n===== STUDENTS TABLE =====");
+            System.out.printf("%-5s %-20s %-15s %-8s %-12s%n","ID","Name","Course","Marks","Phone");
+            System.out.println("-".repeat(65));
+            while (rs.next()) {
+                System.out.printf("%-5d %-20s %-15s %-8.2f %-12s%n",
+                    rs.getInt("id"), rs.getString("name"),
+                    rs.getString("course"), rs.getDouble("marks"), rs.getString("phone"));
+            }
+            System.out.println("==========================");
+        } catch (SQLException e) { System.out.println("Select Error: " + e.getMessage()); }
+    }
+
+    // ---- SELECT BY ID ----
+    static void selectById(int id) {
+        String sql = "SELECT * FROM students WHERE id = ?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println("ID: "+rs.getInt("id")+" | Name: "+rs.getString("name")
+                    +" | Course: "+rs.getString("course")+" | Marks: "+rs.getDouble("marks")
+                    +" | Phone: "+rs.getString("phone"));
+            } else { System.out.println("Student ID "+id+" not found."); }
+        } catch (SQLException e) { System.out.println("Error: " + e.getMessage()); }
+    }
+
+    // ---- UPDATE ----
+    static void updateMarks(int id, double newMarks) {
+        String sql = "UPDATE students SET marks = ? WHERE id = ?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDouble(1, newMarks);
+            ps.setInt(2, id);
+            int rows = ps.executeUpdate();
+            if (rows > 0) System.out.println("Marks updated for ID: " + id);
+            else System.out.println("Student ID " + id + " not found.");
+        } catch (SQLException e) { System.out.println("Update Error: " + e.getMessage()); }
+    }
+
+    // ---- DELETE ----
+    static void deleteStudent(int id) {
+        String sql = "DELETE FROM students WHERE id = ?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+            if (rows > 0) System.out.println("Student ID " + id + " deleted.");
+            else System.out.println("Student ID " + id + " not found.");
+        } catch (SQLException e) { System.out.println("Delete Error: " + e.getMessage()); }
+    }
+
+    // ---- MAIN MENU ----
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); int choice;
+
+        // Load MySQL Driver (JDBC 4.0+ auto-loads, but explicit for clarity)
+        try { Class.forName("com.mysql.cj.jdbc.Driver"); }
+        catch (ClassNotFoundException e) { System.out.println("MySQL Driver not found!"); return; }
+
+        createTable(); // Create table on startup
+
+        do {
+            System.out.println("\\n====== JDBC CRUD OPERATIONS ======");
+            System.out.println("1. Insert Student");
+            System.out.println("2. Select All Students");
+            System.out.println("3. Select Student by ID");
+            System.out.println("4. Update Marks");
+            System.out.println("5. Delete Student");
+            System.out.println("6. Exit");
+            System.out.print("Enter Choice: "); choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    sc.nextLine();
+                    System.out.print("Name: "); String nm = sc.nextLine();
+                    System.out.print("Course: "); String crs = sc.nextLine();
+                    System.out.print("Marks: "); double mk = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.print("Phone: "); String ph = sc.nextLine();
+                    insertStudent(nm, crs, mk, ph);
+                    break;
+                case 2: selectAll(); break;
+                case 3:
+                    System.out.print("Enter ID: "); selectById(sc.nextInt()); break;
+                case 4:
+                    System.out.print("Enter ID: "); int uid = sc.nextInt();
+                    System.out.print("New Marks: "); double umk = sc.nextDouble();
+                    updateMarks(uid, umk); break;
+                case 5:
+                    System.out.print("Enter ID to delete: "); deleteStudent(sc.nextInt()); break;
+                case 6: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid Choice!");
+            }
+        } while (choice != 6);
+        sc.close();
+    }
+}`
+}
+];
+
+function hl(text,q){
+  if(!q) return escHtml(text);
+  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return escHtml(text).replace(re,'<mark>$1</mark>');
+}
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function render(query=''){
+  const q=query.trim().toLowerCase();
+  const sidebar=document.getElementById('sidebar');
+  const content=document.getElementById('content');
+  const info=document.getElementById('resinfo');
+  sidebar.innerHTML='';
+  content.innerHTML='<p class="res-info" id="resinfo"></p>';
+
+  let visible=0;
+  practicals.forEach(p=>{
+    const searchTarget=(p.id+' '+p.title+' '+p.pkg+' '+p.iface+' '+p.code).toLowerCase();
+    const match=!q||searchTarget.includes(q);
+    if(!match) return;
+    visible++;
+
+    // Sidebar link
+    const a=document.createElement('a');
+    a.href='#p'+p.id; a.className='sl block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-black transition-colors truncate mb-1'; a.id='sl'+p.id;
+    a.innerHTML=`<b class="mr-1 font-semibold">${p.id}.</b> ${hl(p.title,query)}`;
+    sidebar.appendChild(a);
+
+    // Card
+    const card=document.createElement('div');
+    card.className='card bg-white rounded-lg border border-gray-200 mb-8 overflow-hidden transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)]'; card.id='p'+p.id;
+    const isSwingJDBC=p.id>=21;
+    const badge=isSwingJDBC?'<svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>':'<svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>';
+    card.innerHTML=`
+<div class="flex items-center justify-between px-6 py-5 bg-white cursor-pointer select-none border-b border-gray-100 gap-4 group hover:bg-gray-50/50 transition-colors" onclick="toggle(this)">
+  <div class="flex-1 min-w-0 flex flex-col md:flex-row md:items-center gap-4">
+    <div class="min-w-0 flex-1">
+      <div class="font-semibold text-lg text-black truncate flex items-center gap-2">${badge} <span>${p.id}. ${hl(p.title,query)}</span></div>
+      <div class="text-xs text-gray-500 mt-1.5 truncate flex items-center gap-2">
+        <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-200">pkg: ${hl(p.pkg,query)}</span>
+        <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-200">iface: ${hl(p.iface,query)}</span>
+      </div>
+    </div>
+    <button class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors flex-shrink-0 z-10 w-fit shadow-sm" onclick="event.stopPropagation(); copyCode(this)" title="Copy Code">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Copy Code
+    </button>
+  </div>
+  <span class="ci text-gray-400 group-hover:text-black transform transition-transform duration-200 flex-shrink-0">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+  </span>
+</div>
+<div class="cb hidden p-5 bg-[#FAFAFA]">
+  <div class="rounded-lg overflow-hidden bg-[#0d0d0d] border border-gray-800 shadow-xl">
+    <div class="flex justify-between items-center px-4 py-2 bg-[#343541] text-gray-300 text-xs font-sans border-b border-gray-700/50">
+      <span class="flex items-center gap-2"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> ${p.pkg}</span>
+      <div class="flex items-center gap-3">
+        <span class="text-gray-500">Java</span>
+        <button class="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors" onclick="event.stopPropagation(); copyCodeInner(this)" title="Copy Code">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Copy
+        </button>
+      </div>
+    </div>
+    <pre class="p-4 overflow-x-auto text-sm font-mono leading-relaxed m-0 text-gray-200 whitespace-pre-wrap break-words"><code class="language-java">${p.code}</code></pre>
+  </div>
+</div>`;
+    content.appendChild(card);
+  });
+
+  const ri=document.getElementById('resinfo');
+  if(ri) ri.textContent=q?`Found ${visible} of ${practicals.length} practicals matching "${query}"`:
+    `${practicals.length} practicals | SY BTech Java OOP | MITAOE SPPU | By Sameet Pisal`;
+
+  // Apply highlight.js syntax highlighting
+  document.querySelectorAll('pre code').forEach((el) => {
+    hljs.highlightElement(el);
+  });
+}
+
+function toggle(header){
+  const body=header.nextElementSibling;
+  const icon=header.querySelector('.ci');
+  const isOpen=!body.classList.contains('hidden');
+  body.classList.toggle('hidden');
+  icon.style.transform=isOpen?'':'rotate(180deg)';
+}
+
+function copyCode(btn){
+  const pre=btn.closest('.card').querySelector('pre');
+  const text=pre.textContent;
+  const originalHtml = btn.innerHTML;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.innerHTML='<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!';
+    btn.className='bg-black text-white border border-black px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors flex-shrink-0 z-10 w-fit shadow-sm';
+    setTimeout(()=>{ btn.innerHTML=originalHtml; btn.className='bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors flex-shrink-0 z-10 w-fit shadow-sm'; },2000);
+  }).catch(()=>{ btn.innerHTML='❌ Failed'; setTimeout(()=>btn.innerHTML=originalHtml,2000); });
+}
+
+function copyCodeInner(btn){
+  const pre=btn.closest('.rounded-lg').querySelector('pre');
+  const text=pre.textContent;
+  const originalHtml = btn.innerHTML;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.innerHTML='<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!';
+    btn.classList.add('text-green-400');
+    setTimeout(()=>{ btn.innerHTML=originalHtml; btn.classList.remove('text-green-400'); },2000);
+  }).catch(()=>{ btn.innerHTML='❌ Failed'; setTimeout(()=>btn.innerHTML=originalHtml,2000); });
+}
+
+let searchTimer;
+function doSearch(val){
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>render(val),200);
+}
+
+// Sidebar active highlight on scroll
+window.addEventListener('scroll',()=>{
+  const cards=document.querySelectorAll('.card');
+  cards.forEach(c=>{
+    const rect=c.getBoundingClientRect();
+    if(rect.top>=0&&rect.top<300){
+      document.querySelectorAll('.sl').forEach(s=>s.classList.remove('act'));
+      const sl=document.getElementById('sl'+c.id.replace('p',''));
+      if(sl) sl.classList.add('act');
+    }
+  });
+},{passive:true});
+
+render();
+</script>
+</body>
+</html>
