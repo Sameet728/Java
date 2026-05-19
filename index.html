@@ -2333,298 +2333,204 @@ public class WeatherForecastingApp {
 }`
 },
 {id:21,title:"Swing GUI — Student Registration Form",pkg:"javax.swing (GUI)",iface:"ActionListener",code:
-`import javax.swing.*;
-import java.awt.*;
+`// File Name: StudentForm.java
+
+import javax.swing.*;
 import java.awt.event.*;
 
-public class StudentRegistrationForm extends JFrame implements ActionListener {
+public class StudentForm extends JFrame implements ActionListener {
 
-    // Components
-    private final JLabel lblTitle, lblName, lblPhone, lblEmail, lblCourse, lblResult;
-    private final JTextField txtName, txtPhone, txtEmail;
-    private final JComboBox<String> cboCourse;
-    private final JButton btnSubmit, btnClear, btnExit;
+    JLabel l1, l2;
+    JTextField t1, t2;
+    JButton b1, b2;
 
-    public StudentRegistrationForm() {
-        setTitle("Student Registration - MITAOE");
-        setSize(450, 380);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(null);
-        getContentPane().setBackground(new Color(240, 242, 247));
+    StudentForm() {
 
-        // Title
-        lblTitle = new JLabel("Student Registration Form", SwingConstants.CENTER);
-        lblTitle.setBounds(20, 10, 400, 35);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitle.setForeground(new Color(26, 35, 126));
-        add(lblTitle);
+        // Labels
+        l1 = new JLabel("Name:");
+        l1.setBounds(50, 50, 100, 30);
 
-        // Name
-        lblName = new JLabel("Full Name:");
-        lblName.setBounds(30, 60, 120, 25);
-        lblName.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(lblName);
+        l2 = new JLabel("Phone Number:");
+        l2.setBounds(50, 100, 120, 30);
 
-        txtName = new JTextField();
-        txtName.setBounds(160, 60, 240, 28);
-        txtName.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(txtName);
+        // Text Fields
+        t1 = new JTextField();
+        t1.setBounds(180, 50, 150, 30);
 
-        // Phone
-        lblPhone = new JLabel("Phone Number:");
-        lblPhone.setBounds(30, 105, 120, 25);
-        lblPhone.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(lblPhone);
-
-        txtPhone = new JTextField();
-        txtPhone.setBounds(160, 105, 240, 28);
-        txtPhone.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(txtPhone);
-
-        // Email
-        lblEmail = new JLabel("Email:");
-        lblEmail.setBounds(30, 150, 120, 25);
-        lblEmail.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(lblEmail);
-
-        txtEmail = new JTextField();
-        txtEmail.setBounds(160, 150, 240, 28);
-        txtEmail.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(txtEmail);
-
-        // Course
-        lblCourse = new JLabel("Course:");
-        lblCourse.setBounds(30, 195, 120, 25);
-        lblCourse.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(lblCourse);
-
-        String[] courses = {"Select Course","B.Tech CSE","B.Tech IT","B.Tech ENTC","B.Tech Mech","MCA"};
-        cboCourse = new JComboBox<>(courses);
-        cboCourse.setBounds(160, 195, 240, 28);
-        cboCourse.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        add(cboCourse);
+        t2 = new JTextField();
+        t2.setBounds(180, 100, 150, 30);
 
         // Buttons
-        btnSubmit = new JButton("Submit");
-        btnSubmit.setBounds(60, 250, 100, 35);
-        btnSubmit.setBackground(new Color(26, 35, 126));
-        btnSubmit.setForeground(Color.WHITE);
-        btnSubmit.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnSubmit.setFocusPainted(false);
-        btnSubmit.addActionListener(this);
-        add(btnSubmit);
+        b1 = new JButton("Submit");
+        b1.setBounds(70, 180, 100, 40);
 
-        btnClear = new JButton("Clear");
-        btnClear.setBounds(175, 250, 100, 35);
-        btnClear.setBackground(new Color(100, 100, 100));
-        btnClear.setForeground(Color.WHITE);
-        btnClear.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnClear.setFocusPainted(false);
-        btnClear.addActionListener(this);
-        add(btnClear);
+        b2 = new JButton("Exit");
+        b2.setBounds(200, 180, 100, 40);
 
-        btnExit = new JButton("Exit");
-        btnExit.setBounds(290, 250, 100, 35);
-        btnExit.setBackground(new Color(183, 28, 28));
-        btnExit.setForeground(Color.WHITE);
-        btnExit.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnExit.setFocusPainted(false);
-        btnExit.addActionListener(this);
-        add(btnExit);
+        // Add Action Listener
+        b1.addActionListener(this);
+        b2.addActionListener(this);
 
-        // Result Label
-        lblResult = new JLabel("", SwingConstants.CENTER);
-        lblResult.setBounds(20, 300, 400, 30);
-        lblResult.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        add(lblResult);
+        // Add Components
+        add(l1);
+        add(l2);
+        add(t1);
+        add(t2);
+        add(b1);
+        add(b2);
 
+        // Frame Settings
+        setTitle("Student Registration Form");
+        setSize(420, 320);
+        setLayout(null);
         setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    @Override
+    // Button Events
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnSubmit) {
-            String name  = txtName.getText().trim();
-            String phone = txtPhone.getText().trim();
-            String email = txtEmail.getText().trim();
-            String course= (String) cboCourse.getSelectedItem();
 
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || course.equals("Select Course")) {
-                lblResult.setText("Please fill all fields!");
-                lblResult.setForeground(new Color(183, 28, 28));
-            } else if (!phone.matches("\\d{10}")) {
-                lblResult.setText("Invalid phone number! (10 digits required)");
-                lblResult.setForeground(new Color(183, 28, 28));
-            } else {
-                lblResult.setText("Registered: " + name + " | " + course);
-                lblResult.setForeground(new Color(27, 94, 32));
-                JOptionPane.showMessageDialog(this,
-                    "Registration Successful!\\nName: "+name+"\\nPhone: "+phone+"\\nEmail: "+email+"\\nCourse: "+course,
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } else if (e.getSource() == btnClear) {
-            txtName.setText("");
-            txtPhone.setText("");
-            txtEmail.setText("");
-            cboCourse.setSelectedIndex(0);
-            lblResult.setText("");
-        } else if (e.getSource() == btnExit) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Exit application?", "Confirm", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) System.exit(0);
+        // Submit Button
+        if (e.getSource() == b1) {
+
+            String name = t1.getText();
+            String phone = t2.getText();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Form Submitted Successfully!\n\n"
+                            + "Name: " + name
+                            + "\nPhone Number: " + phone
+            );
+        }
+
+        // Exit Button
+        if (e.getSource() == b2) {
+            System.exit(0);
         }
     }
 
+    // Main Method
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(StudentRegistrationForm::new);
+
+        new StudentForm();
     }
+}
+
 }`
 },
 {id:22,title:"JDBC — Complete CRUD Operations",pkg:"java.sql (JDBC)",iface:"Connection, PreparedStatement",code:
-`import java.sql.*;
-import java.util.Scanner;
+`// File Name: JDBCProgram.java
 
-// SETUP: Create DB first by running this SQL:
-// CREATE DATABASE college_db;
-// USE college_db;
+import java.sql.*;
 
-public class JDBCCRUDOperations {
+public class JDBCProgram {
 
-    // ---- Database Connection ----
-    static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/college_db",
-            "root",
-            "your_password"
-        );
-    }
-
-    // ---- Create Table ----
-    static void createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS students ("
-                   + "id INT PRIMARY KEY AUTO_INCREMENT, "
-                   + "name VARCHAR(100) NOT NULL, "
-                   + "course VARCHAR(100), "
-                   + "marks DOUBLE, "
-                   + "phone VARCHAR(15))";
-        try (Connection con = getConnection(); Statement st = con.createStatement()) {
-            st.executeUpdate(sql);
-            System.out.println("Table 'students' created (or already exists).");
-        } catch (SQLException e) { System.out.println("Error: " + e.getMessage()); }
-    }
-
-    // ---- INSERT ----
-    static void insertStudent(String name, String course, double marks, String phone) {
-        String sql = "INSERT INTO students (name, course, marks, phone) VALUES (?, ?, ?, ?)";
-        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, name);
-            ps.setString(2, course);
-            ps.setDouble(3, marks);
-            ps.setString(4, phone);
-            int rows = ps.executeUpdate();
-            System.out.println(rows + " row(s) inserted. Student: " + name);
-        } catch (SQLException e) { System.out.println("Insert Error: " + e.getMessage()); }
-    }
-
-    // ---- SELECT ALL ----
-    static void selectAll() {
-        String sql = "SELECT * FROM students";
-        try (Connection con = getConnection(); Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            System.out.println("\\n===== STUDENTS TABLE =====");
-            System.out.printf("%-5s %-20s %-15s %-8s %-12s%n","ID","Name","Course","Marks","Phone");
-            System.out.println("-".repeat(65));
-            while (rs.next()) {
-                System.out.printf("%-5d %-20s %-15s %-8.2f %-12s%n",
-                    rs.getInt("id"), rs.getString("name"),
-                    rs.getString("course"), rs.getDouble("marks"), rs.getString("phone"));
-            }
-            System.out.println("==========================");
-        } catch (SQLException e) { System.out.println("Select Error: " + e.getMessage()); }
-    }
-
-    // ---- SELECT BY ID ----
-    static void selectById(int id) {
-        String sql = "SELECT * FROM students WHERE id = ?";
-        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                System.out.println("ID: "+rs.getInt("id")+" | Name: "+rs.getString("name")
-                    +" | Course: "+rs.getString("course")+" | Marks: "+rs.getDouble("marks")
-                    +" | Phone: "+rs.getString("phone"));
-            } else { System.out.println("Student ID "+id+" not found."); }
-        } catch (SQLException e) { System.out.println("Error: " + e.getMessage()); }
-    }
-
-    // ---- UPDATE ----
-    static void updateMarks(int id, double newMarks) {
-        String sql = "UPDATE students SET marks = ? WHERE id = ?";
-        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setDouble(1, newMarks);
-            ps.setInt(2, id);
-            int rows = ps.executeUpdate();
-            if (rows > 0) System.out.println("Marks updated for ID: " + id);
-            else System.out.println("Student ID " + id + " not found.");
-        } catch (SQLException e) { System.out.println("Update Error: " + e.getMessage()); }
-    }
-
-    // ---- DELETE ----
-    static void deleteStudent(int id) {
-        String sql = "DELETE FROM students WHERE id = ?";
-        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            int rows = ps.executeUpdate();
-            if (rows > 0) System.out.println("Student ID " + id + " deleted.");
-            else System.out.println("Student ID " + id + " not found.");
-        } catch (SQLException e) { System.out.println("Delete Error: " + e.getMessage()); }
-    }
-
-    // ---- MAIN MENU ----
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in); int choice;
 
-        // Load MySQL Driver (JDBC 4.0+ auto-loads, but explicit for clarity)
-        try { Class.forName("com.mysql.cj.jdbc.Driver"); }
-        catch (ClassNotFoundException e) { System.out.println("MySQL Driver not found!"); return; }
+        Connection con = null;
+        Statement stmt = null;
 
-        createTable(); // Create table on startup
+        try {
 
-        do {
-            System.out.println("\\n====== JDBC CRUD OPERATIONS ======");
-            System.out.println("1. Insert Student");
-            System.out.println("2. Select All Students");
-            System.out.println("3. Select Student by ID");
-            System.out.println("4. Update Marks");
-            System.out.println("5. Delete Student");
-            System.out.println("6. Exit");
-            System.out.print("Enter Choice: "); choice = sc.nextInt();
+            // Load Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            switch (choice) {
-                case 1:
-                    sc.nextLine();
-                    System.out.print("Name: "); String nm = sc.nextLine();
-                    System.out.print("Course: "); String crs = sc.nextLine();
-                    System.out.print("Marks: "); double mk = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.print("Phone: "); String ph = sc.nextLine();
-                    insertStudent(nm, crs, mk, ph);
-                    break;
-                case 2: selectAll(); break;
-                case 3:
-                    System.out.print("Enter ID: "); selectById(sc.nextInt()); break;
-                case 4:
-                    System.out.print("Enter ID: "); int uid = sc.nextInt();
-                    System.out.print("New Marks: "); double umk = sc.nextDouble();
-                    updateMarks(uid, umk); break;
-                case 5:
-                    System.out.print("Enter ID to delete: "); deleteStudent(sc.nextInt()); break;
-                case 6: System.out.println("Exiting..."); break;
-                default: System.out.println("Invalid Choice!");
+            // Connection
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/dbms_db",
+                    "root",
+                    "your_password"
+            );
+
+            System.out.println("Database Connected Successfully!");
+
+            // Create Statement
+            stmt = con.createStatement();
+
+            // Create Table
+            String createTable =
+                    "CREATE TABLE IF NOT EXISTS student (" +
+                    "id INT PRIMARY KEY," +
+                    "name VARCHAR(50)," +
+                    "marks DOUBLE)";
+
+            stmt.executeUpdate(createTable);
+
+            System.out.println("Table Created Successfully!");
+
+            // INSERT
+            String insertQuery =
+                    "INSERT INTO student VALUES (1,'Sameet',95.5)";
+
+            stmt.executeUpdate(insertQuery);
+
+            System.out.println("Record Inserted Successfully!");
+
+            // UPDATE
+            String updateQuery =
+                    "UPDATE student SET marks = 98 WHERE id = 1";
+
+            stmt.executeUpdate(updateQuery);
+
+            System.out.println("Record Updated Successfully!");
+
+            // SELECT
+            String selectQuery = "SELECT * FROM student";
+
+            ResultSet rs = stmt.executeQuery(selectQuery);
+
+            System.out.println("\n===== STUDENT RECORDS =====");
+
+            while (rs.next()) {
+
+                System.out.println(
+                        "ID: " + rs.getInt("id")
+                                + " | Name: " + rs.getString("name")
+                                + " | Marks: " + rs.getDouble("marks")
+                );
             }
-        } while (choice != 6);
-        sc.close();
+
+            // DELETE
+            String deleteQuery =
+                    "DELETE FROM student WHERE id = 1";
+
+            stmt.executeUpdate(deleteQuery);
+
+            System.out.println("\nRecord Deleted Successfully!");
+
+        } catch (ClassNotFoundException e) {
+
+            System.out.println("Driver Not Found!");
+
+        } catch (SQLException e) {
+
+            System.out.println("Database Error: " + e.getMessage());
+
+        } catch (Exception e) {
+
+            System.out.println("Error: " + e.getMessage());
+
+        } finally {
+
+            try {
+
+                if (stmt != null)
+                    stmt.close();
+
+                if (con != null)
+                    con.close();
+
+                System.out.println("Connection Closed!");
+
+            } catch (SQLException e) {
+
+                System.out.println("Closing Error!");
+            }
+        }
     }
+}
+
 }`
 }
 ];
