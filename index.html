@@ -2398,9 +2398,9 @@ public class StudentForm extends JFrame implements ActionListener {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Form Submitted Successfully!\n\n"
+                    "Form Submitted Successfully!\\n\\n"
                             + "Name: " + name
-                            + "\nPhone Number: " + phone
+                            + "\\nPhone Number: " + phone
             );
         }
 
@@ -2416,8 +2416,7 @@ public class StudentForm extends JFrame implements ActionListener {
         new StudentForm();
     }
 }
-
-}`
+`
 },
 {id:22,title:"JDBC — Complete CRUD Operations",pkg:"java.sql (JDBC)",iface:"Connection, PreparedStatement",code:
 `// File Name: JDBCProgram.java
@@ -2436,11 +2435,11 @@ public class JDBCProgram {
             // Load Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Connection
+            // Create Connection
             con = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/dbms_db",
                     "root",
-                    "your_password"
+                    "YOUR_PASSWORD"
             );
 
             System.out.println("Database Connected Successfully!");
@@ -2451,23 +2450,23 @@ public class JDBCProgram {
             // Create Table
             String createTable =
                     "CREATE TABLE IF NOT EXISTS student (" +
-                    "id INT PRIMARY KEY," +
-                    "name VARCHAR(50)," +
-                    "marks DOUBLE)";
+                            "id INT PRIMARY KEY," +
+                            "name VARCHAR(50)," +
+                            "marks DOUBLE)";
 
             stmt.executeUpdate(createTable);
 
             System.out.println("Table Created Successfully!");
 
-            // INSERT
+            // Insert Record
             String insertQuery =
-                    "INSERT INTO student VALUES (1,'Sameet',95.5)";
+                    "INSERT INTO student(id, name, marks) VALUES (1, 'Sameet', 95.5)";
 
             stmt.executeUpdate(insertQuery);
 
             System.out.println("Record Inserted Successfully!");
 
-            // UPDATE
+            // Update Record
             String updateQuery =
                     "UPDATE student SET marks = 98 WHERE id = 1";
 
@@ -2475,43 +2474,45 @@ public class JDBCProgram {
 
             System.out.println("Record Updated Successfully!");
 
-            // SELECT
+            // Select Record
             String selectQuery = "SELECT * FROM student";
 
             ResultSet rs = stmt.executeQuery(selectQuery);
 
-            System.out.println("\n===== STUDENT RECORDS =====");
+            System.out.println("\\n===== STUDENT RECORDS =====");
 
             while (rs.next()) {
 
                 System.out.println(
-                        "ID: " + rs.getInt("id")
-                                + " | Name: " + rs.getString("name")
-                                + " | Marks: " + rs.getDouble("marks")
+                        "ID: " + rs.getInt("id") +
+                                " | Name: " + rs.getString("name") +
+                                " | Marks: " + rs.getDouble("marks")
                 );
             }
 
-            // DELETE
+            // Delete Record
             String deleteQuery =
                     "DELETE FROM student WHERE id = 1";
 
             stmt.executeUpdate(deleteQuery);
 
-            System.out.println("\nRecord Deleted Successfully!");
+            System.out.println("\\nRecord Deleted Successfully!");
 
-        } catch (ClassNotFoundException e) {
+        }
 
-            System.out.println("Driver Not Found!");
+        catch (ClassNotFoundException e) {
 
-        } catch (SQLException e) {
+            System.out.println("MySQL Driver Not Found!");
 
-            System.out.println("Database Error: " + e.getMessage());
+        }
 
-        } catch (Exception e) {
+        catch (SQLException e) {
 
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("SQL Error: " + e.getMessage());
 
-        } finally {
+        }
+
+        finally {
 
             try {
 
@@ -2523,15 +2524,16 @@ public class JDBCProgram {
 
                 System.out.println("Connection Closed!");
 
-            } catch (SQLException e) {
+            }
+
+            catch (SQLException e) {
 
                 System.out.println("Closing Error!");
             }
         }
     }
 }
-
-}`
+`
 }
 ];
 
@@ -2582,7 +2584,7 @@ function render(query=''){
     
     const isSpecialPkg = !p.pkg || p.pkg.includes('GUI') || p.pkg.includes('JDBC');
     const actualPkg = isSpecialPkg ? '' : p.pkg;
-    const filePath = actualPkg ? actualPkg.split('.').join('\\\\') + '\\\\' + mainClass + '.java' : mainClass + '.java';
+    const filePath = actualPkg ? actualPkg.split('.').join('\\') + '\\' + mainClass + '.java' : mainClass + '.java';
     
     let compileCmd = `javac ${filePath}`;
     let runCmd = actualPkg ? `java ${actualPkg}.${mainClass}` : `java ${mainClass}`;
